@@ -1,0 +1,230 @@
+
+{% extends "basic.html" %}
+{% block title %}
+	{{thispeople.name}}-個人記錄
+{% endblock title %}
+
+{% block content %}
+{% if thispeople %}
+
+	<div class="container">
+		<h4>{{name}}</h4>
+		<br>
+		<table class="table table-hover table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th colspan="18" class="table-title">逐場打擊成績</th>
+				</tr>
+				<tr>
+					<th>日期</th>
+					<th>對手</th>
+					<th>打席</th>
+					<th>打數</th>
+					<th>安打</th>
+					<th>一安</th>
+					<th>二安</th>
+					<th>三安</th>
+					<th>全壘打</th>
+					<th>打點</th>
+					<th>得分</th>
+					<th>保送</th>
+					<th>三振</th>
+					<th>犧牲打</th>
+					<th>打擊率</th>
+					<th>上壘率</th>
+					<th>長打率</th>
+					<th>攻擊指數</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for hitting in hitting_list %}
+				<tr>
+					<td><a href="/game/{{hitting.gameID}}">{{hitting.date}}</a></td>
+					<td><a href="/team/{{hitting.oppID}}">{{hitting.opp}}</a></td>
+					<td>{{hitting.pa}}</td>
+					<td>{{hitting.ab}}</td>
+					<td>{{hitting.hit}}</td>
+					<td>{{hitting.single}}</td>
+					<td>{{hitting.double}}</td>
+					<td>{{hitting.triple}}</td>
+					<td>{{hitting.hr}}</td>
+					<td>{{hitting.rbi}}</td>
+					<td>{{hitting.r}}</td>
+					<td>{{hitting.bb}}</td>
+					<td>{{hitting.so}}</td>
+					<td>{{hitting.sf}}</td>
+					<td>{{hitting.avg_s}}</td>
+					<td>{{hitting.obp_s}}</td>
+					<td>{{hitting.slg_s}}</td>
+					<td>{{hitting.ops_s}}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+
+			<thead>
+				<tr>
+					<th colspan="18" class="table-title">生涯打擊成績</th>
+				</tr>
+				<tr>
+					<th>球季</th>
+					<th>出賽</th>
+					<th>打席</th>
+					<th>打數</th>
+					<th>安打</th>
+					<th>一安</th>
+					<th>二安</th>
+					<th>三安</th>
+					<th>全壘打</th>
+					<th>打點</th>
+					<th>得分</th>
+					<th>保送</th>
+					<th>三振</th>
+					<th>犧牲打</th>
+					<th>打擊率</th>
+					<th>上壘率</th>
+					<th>長打率</th>
+					<th>攻擊指數</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>2014</td>
+					<td>{{hitting_sum.games_played}}</td>
+					<td>{{hitting_sum.pa}}</td>
+					<td>{{hitting_sum.ab}}</td>
+					<td>{{hitting_sum.hit}}</td>
+					<td>{{hitting_sum.single}}</td>
+					<td>{{hitting_sum.double}}</td>
+					<td>{{hitting_sum.triple}}</td>
+					<td>{{hitting_sum.hr}}</td>
+					<td>{{hitting_sum.rbi}}</td>
+					<td>{{hitting_sum.r}}</td>
+					<td>{{hitting_sum.bb}}</td>
+					<td>{{hitting_sum.so}}</td>
+					<td>{{hitting_sum.sf}}</td>
+					<td>{{hitting_sum.avg_s}}</td>
+					<td>{{hitting_sum.obp_s}}</td>
+					<td>{{hitting_sum.slg_s}}</td>
+					<td>{{hitting_sum.ops_s}}</td>
+				</tr>
+			</tbody>
+
+		</table>
+
+	</div>
+	<br><br>
+	
+	<div class="container">
+		<table class="table table-hover table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th colspan="18" class="table-title">逐場投球成績</th>
+				</tr>
+				<tr>
+					<th>日期</th>
+					<th>對手</th>
+					<th>勝投</th>
+					<th>敗投</th>
+					<th>打席</th>
+					<th>局數</th>
+					<th>奪三振</th>
+					<th>被安打</th>
+					<th>保送</th>
+					<th>被全壘打</th>
+					<th>失分</th>
+					<th>責失分</th>
+					<th>滾地出局</th>
+					<th>飛球出局</th>
+					<th>保送/局數</th>
+					<th>自責分率</th>
+					<th>被上壘率</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for pitching in pitching_list %}
+				<tr>
+					<td><a href="/game/{{pitching.gameID}}">{{pitching.date}}</a></td>
+					<td><a href="/team/{{pitching.oppID}}">{{pitching.opp}}</a></td>
+					<td>{{pitching.win}}</td>
+					<td>{{pitching.lose}}</td>
+					<td>{{pitching.pa}}</td>
+					<td>{{pitching.inning}}</td>
+					<td>{{pitching.so}}</td>
+					<td>{{pitching.h}}</td>
+					<td>{{pitching.bb}}</td>
+					<td>{{pitching.hr}}</td>
+					<td>{{pitching.r}}</td>
+					<td>{{pitching.er}}</td>
+					<td>{{pitching.go}}</td>
+					<td>{{pitching.fo}}</td>
+					<td>{{pitching.bb_inning_s}}</td>
+					<td>{{pitching.era_s}}</td>
+					<td>{{pitching.whip_s}}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+			
+			<thead>
+				<tr>
+					<th colspan="18" class="table-title">生涯投球成績</th>
+				</tr>
+				<tr>
+					<th>球季</th>
+					<th>出賽</th>
+					<th>勝投</th>
+					<th>敗投</th>
+					<th>打席</th>
+					<th>局數</th>
+					<th>奪三振</th>
+					<th>被安打</th>
+					<th>保送</th>
+					<th>被全壘打</th>
+					<th>失分</th>
+					<th>責失分</th>
+					<th>滾地出局</th>
+					<th>飛球出局</th>
+					<th>保送/局數</th>
+					<th>自責分率</th>
+					<th>被上壘率</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>2014</td>
+					<td>{{pitching_sum.games_played}}</td>
+					<td>{{pitching_sum.win}}</td>
+					<td>{{pitching_sum.lose}}</td>
+					<td>{{pitching_sum.pa}}</td>
+					<td>{{pitching_sum.inning}}</td>
+					<td>{{pitching_sum.so}}</td>
+					<td>{{pitching_sum.h}}</td>
+					<td>{{pitching_sum.bb}}</td>
+					<td>{{pitching_sum.hr}}</td>
+					<td>{{pitching_sum.r}}</td>
+					<td>{{pitching_sum.er}}</td>
+					<td>{{pitching_sum.go}}</td>
+					<td>{{pitching_sum.fo}}</td>
+					<td>{{pitching_sum.bb_inning_s}}</td>
+					<td>{{pitching_sum.era_s}}</td>
+					<td>{{pitching_sum.whip_s}}</td>
+				</tr>
+			</tbody>
+
+		</table>
+
+	</div>
+
+	
+{% endif %}
+    
+    <div class="footer">
+        <div class="container">
+            <div class="row row-center">
+                <div class="fb-box col-center">
+    	            <div class="fb-like-box" data-href="https://www.facebook.com/NTUSBLeague" data-width="400" data-height="300" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

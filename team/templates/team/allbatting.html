@@ -1,0 +1,84 @@
+{% extends "basic.html" %}
+{% block title %}
+	打者排行
+{% endblock title %}
+
+{% block navbar %}
+	<ul class="nav navbar-nav">
+		<li><a href="/game">賽程</a></li>
+	   	<li><a href="/team">球隊</a></li>
+	   	<li class="active"><a href="/batting/avg">打擊排行</a></li>
+	   	<li><a href="/pitching/win">投手排行</a></li>
+	</ul>
+{% endblock navbar %}
+
+{% block content %}
+{% if batting_list %}
+
+	<div class="container">
+		<table class="table table-hover table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>名字</th>
+					<th>球隊</th>
+					<th><a href="/batting/games_played"	>出賽</a></th>
+					<th><a href="/batting/pa"			>打席</a></th>
+					<th><a href="/batting/ab"			>打數</a></th>
+					<th><a href="/batting/hit"			>安打</a></th>
+					<th><a href="/batting/single"		>一安</a></th>
+					<th><a href="/batting/double"		>二安</a></th>
+					<th><a href="/batting/triple"		>三安</a></th>
+					<th><a href="/batting/hr"			>全壘打</a></th>
+					<th><a href="/batting/rbi"			>打點</a></th>
+					<th><a href="/batting/r"			>得分</a></th>
+					<th><a href="/batting/bb"			>保送</a></th>
+					<th><a href="/batting/so"			>三振</a></th>
+					<th><a href="/batting/sf"			>犧牲</a></th>
+					<th><a href="/batting/avg"			>打擊率</a></th>
+					<th><a href="/batting/obp"			>上壘率</a></th>
+					<th><a href="/batting/slg"			>長打率</a></th>
+					<th><a href="/batting/ops"			>攻擊指數</a></th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for player in batting_list %}
+				<tr>
+					<td><a href="/people/{{player.memberID}}">{{player.name}}</a></td>
+                    <td><a href="/team/{{player.teamID}}">{{player.team}}</a></td>
+					<td>{{player.games_played}}</td>
+					<td>{{player.pa}}</td>
+					<td>{{player.ab}}</td>
+					<td>{{player.hit}}</td>
+					<td>{{player.single}}</td>
+					<td>{{player.double}}</td>
+					<td>{{player.triple}}</td>
+					<td>{{player.hr}}</td>
+					<td>{{player.rbi}}</td>
+					<td>{{player.r}}</td>
+					<td>{{player.bb}}</td>
+					<td>{{player.so}}</td>
+					<td>{{player.sf}}</td>
+					<td>{{player.avg_s}}</td>
+					<td>{{player.obp_s}}</td>
+					<td>{{player.slg_s}}</td>
+					<td>{{player.ops_s}}</td>		
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	
+{% endif %}
+
+    <div class="footer">
+        <div class="container">
+            <div class="row row-center">
+                <div class="fb-box col-center">
+    	            <div class="fb-like-box" data-href="https://www.facebook.com/NTUSBLeague" data-width="400" data-height="300" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

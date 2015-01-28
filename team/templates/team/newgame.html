@@ -1,0 +1,259 @@
+{% extends "basic.html" %}
+
+{% block content %}
+<div class="container">
+	<form action="{%url 'newgame'%}" method = "post">
+		{% csrf_token %}
+	    <div class="row">	
+    		<div class="row-center">
+    			<div class="col-xs-3 col-center">	
+    				<div class="form-horizontal">
+
+                        <div class="form-group">
+    						<label class="col-sm-4 control-label">Away</label>
+    						<div class="col-sm-8">
+								<select name="awayteamID" class="form-control">
+									{% for team in teams %}
+										{% if team.teamID == awayteam.teamID %}
+											<option value="{{team.teamID}}" selected>{{team.name}}</option>	
+										{% else %}
+											<option value="{{team.teamID}}">{{team.name}}</option>	
+										{% endif %}
+									{% endfor %}
+								</select>						
+                            </div>
+    					</div>
+
+                        <div class="form-group">
+    						<label class="col-sm-4 control-label">Home</label>
+    						<div class="col-sm-8">
+								<select name="hometeamID" class="form-control">
+									{% for team in teams %}
+										{% if team.teamID == hometeam.teamID %}
+											<option value="{{team.teamID}}" selected>{{team.name}}</option>	
+										{% else %}
+											<option value="{{team.teamID}}">{{team.name}}</option>	
+										{% endif %}
+									{% endfor %}
+								</select>						
+                            </div>
+    					</div>
+    					<div class="form-group">
+    						<label class="col-sm-4 control-label">日期</label>
+    						<div class="col-sm-8">
+                                <input type="date" class="form-control" name="date" value="{{date}}">
+                            </div>
+    					</div>
+    					<div class="form-group">
+    						<label class="col-sm-4 control-label">地點</label>
+    						<div class="col-sm-8">
+                                <input type="text" class="form-control" name="location" size="2" class="form-control" value="{{location}}">
+                            </div>
+    					</div>
+    					<div class="form-group">
+   							<label class="col-sm-4 control-label">場次編號</label>
+    						<div class="col-sm-8">
+                                <input type="number" class="form-control" name="game_id" value="{{game_id}}"><br>
+                            </div>
+    					</div>
+    				</div>
+    			</div>	
+            </div>
+        </div>
+
+
+		<div class="row table-title warning">
+			{{warning}}
+		</div>
+		
+
+		<div class="row">
+			<div class="col-md-6">
+				<div class="table-title">Away</div>
+				<textarea class="record lined" name="away_rd" rows="11">{{away_record}}</textarea>
+			</div>
+			<div class="col-md-6">
+				<div class="table-title">Home</div>
+                <textarea class="record lined" name="home_rd" rows="11">{{home_record}}</textarea>					
+			</div>
+		</div>
+
+
+		
+		<br>
+		<div class="row">
+            <div class="panel-group" role="tablist">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="collapseListGroupHeading1" data-toggle="collapse" href="#collapseListGroup1" aria-expanded="false" aria-controls="collapseListGroup1">
+                        <h4 class="panel-title title">
+                            <a class="collapsed" >
+                                記錄寫法
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseListGroup1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingListGroupHeading1">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+<pre>姓名or背號  守位  PA  PA  PA
+
+PA：(換投/代打/)方位/記錄/註解
+換投：p + 姓名or背號
+代打：r + 背號or背號
+方位：可以是守備代號(1~10)或L、R、C
+記錄：1B  一壘安打
+      2B  二壘安打
+      3B  三壘安打
+      HR  全壘打
+      SF  高飛犧牲打
+      BB  保送
+      K   三振
+      G   滾地球出局
+      F   飛球出局
+      DP  雙殺打
+      FC  野手選擇
+      E   失誤
+      IB  違規擊球(Illegal Batted)
+      CB  投手強襲球(combacker)
+      IF  內野高飛必死球(Infield Fly)
+      FO  界外飛球接殺(Foul Out)
+        
+註解：1~4 打點
+      r   得分
+      x   出局數(目前這個打席造成的出局數，而非球員出局。DP, K, G, F, SF, IB, CB, IF, FO不必寫x，FC和其他情形一定要寫)
+      #   換局
+      !   比賽結束
+      *   補充說明
+
+Example:
+
+74  1B  BB      6/F     7/F
+36  2B  DP      8/F     BB/r
+7   3B  1/F/#   9/3B    8/2B/r
+71  SS  6/E/r   1/G/#   8/2B/2
+20  C   6/E     p99/8/F 6/G/!
+24  P   K       6/G
+35  LF  BB      BB
+29  CF  K       1/1B
+21  RF  1/E     6/FC/x#
+77  FF  K/#     1/G
+</pre></li>      
+                        </ul>
+                    </div>
+                </div>
+            </div>
+		</div>
+
+
+		<br>
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4 button">
+				<input type="submit" class="btn btn-primary" name="preview" value="預覽">
+				<input type="submit" class="btn btn-primary" name="download" value="下載PTT記錄檔">
+				<input type="submit" class="btn btn-success" name="send" value="送出">
+			</div>
+		</div>
+	</form>
+	
+
+	<br>
+	{% if preview %}
+    <div class="preview">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<table class="table table-condensed table-bordered fixed-width table-hover">
+				<thead>
+					<tr>
+						<th></th>
+						<th>1</th>
+						<th>2</th>
+						<th>3</th>
+						<th>4</th>
+						<th>5</th>
+						<th>6</th>
+						<th>7</th>
+						<th>R</th>
+						<th>H</th>
+						<th>E</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th>
+							{{record.away.name}}<input type="hidden" name="awayid" value = "{{awayteam.teamID}}">
+						</th>
+						{% for score in record.away.scores %}
+							<th>{{score}}</th>
+						{% endfor %}
+						<th>{{record.away.R}}</th>
+						<th>{{record.away.H}}</th>
+						<th>{{record.away.E}}</th>
+					</tr>
+					<tr>
+						<th>
+							{{record.home.name}}<input type="hidden" name="homeid" value = "{{hometeam.teamID}}">
+						</th>
+						{% for score in record.home.scores %}
+							<th>{{score}}</th>
+						{% endfor %}
+						<th>{{record.home.R}}</th>
+						<th>{{record.home.H}}</th>
+						<th>{{record.home.E}}</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<table class="table table-condensed table-bordered table-hover">
+				{% for row in record.away.batter_table %}
+				<tr>
+					{% for col in row %}
+						<td>{{col}}</td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+		<div class="col-md-6">
+			<table class="table table-condensed table-bordered table-hover">
+				{% for row in record.home.batter_table %}
+				<tr>
+					{% for col in row %}
+						<td>{{col}}</td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<table class="table table-condensed table-bordered table-hover">
+				{% for row in record.away.pitcher_table %}
+				<tr>
+					{% for col in row %}
+						<td>{{col}}</td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+		<div class="col-md-6">
+			<table class="table table-condensed table-bordered table-hover">
+				{% for row in record.home.pitcher_table %}
+				<tr>
+					{% for col in row %}
+						<td>{{col}}</td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+	</div>
+	{% endif %}
+
+</div>
+
+{% endblock content %}

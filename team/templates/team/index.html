@@ -1,0 +1,22 @@
+{% extends "basic.html" %}
+
+{% block content %}	
+
+	<div class="container">
+		{% if user.is_authenticated %}
+			username: {{user.username}}
+		{% else %}
+			user not login!
+		{% endif %}
+        <div class="fb-like" data-share="true" data-width="450" data-show-faces="true"	>
+        </div>
+
+		<div class="row">
+			{% for p in player %}
+				{{p.name}}
+				<br>
+			{% endfor %}
+		</div>
+	</div> <!-- end of container -->
+	
+{% endblock content %}

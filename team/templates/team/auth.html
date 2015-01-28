@@ -1,0 +1,21 @@
+{% extends "basic.html" %}
+
+{% block title %}
+	登入頁面
+{% endblock title %}
+
+{% block contend %}
+<table>
+	<form action="login" method = "POST">
+	<tr>
+		<td>帳號</td>
+		<td><input type="text" name = "id"></td>
+	</tr>
+	<tr>
+		<td>密碼</td>
+		<td><input type="password" name="password"></td>
+	</tr>
+
+	</form>
+</table>
+{% endblock contend %}

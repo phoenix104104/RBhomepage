@@ -1,0 +1,110 @@
+table th, td{
+	text-align: center !important;
+}
+
+table{
+	/*margin-right: auto;
+	margin-left: auto;
+	table-layout: fixed;*/
+}
+
+.fixed-width{
+	table-layout: fixed;
+}
+
+.table-title{
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+	padding-bottom: 10px;
+}
+
+
+.title{
+	text-align: center;
+	font-weight: bold;
+}
+
+.main-body{
+	margin-top: 70px !important;
+}
+
+.record{
+	font-family: "Courier New";
+	width: 100%;
+}
+
+.warning{
+	color: red;
+}
+
+
+.form-td{
+	width: 35px;
+	margin: 0px !important;
+	padding-left: 2px !important;
+	padding-right: 2px !important;
+}
+
+.form-name{
+	width: 90px;
+}
+.form-name-show{
+	width: 60px !important;
+}
+
+.td-input{
+	width: 100%;
+	margin: 0px !important;
+	padding: 0px !important;
+}
+
+.td-win{
+	width: 10px;
+}
+.team-record{
+
+}
+
+.button{
+	text-align: center;
+}
+
+.s{
+	width : 20px;
+}
+
+.short{
+	width : 110px;
+}
+
+.preview{
+    padding: 10px;
+    border-style: double;
+    border-width: 3px;
+}
+.row-center{
+    text-align: center !important;
+}
+.col-center{
+    display: inline-block;
+    float: none;
+
+}
+
+.footer{
+    bottom: 0;
+    width: 100%;
+    height: 400px;
+    background-color: #CCCCCC;
+}
+
+.footer > .container {
+    padding: 50px 30px 30px;
+}
+
+.footer > .container > .row > .fb-box {
+    height: 300px;
+    width: 400px;
+    background-color: #FFFFFF !important;
+}

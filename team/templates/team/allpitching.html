@@ -1,0 +1,81 @@
+{% extends "basic.html" %}
+{% block title %}
+	投手排行
+{% endblock title %}
+
+{% block navbar %}
+	<ul class="nav navbar-nav">
+		<li><a href="/game">賽程</a></li>
+	   	<li><a href="/team">球隊</a></li>
+	   	<li><a href="/batting/avg">打擊排行</a></li>
+	   	<li class="active"><a href="/pitching/win">投手排行</a></li>
+	</ul>
+{% endblock navbar %}
+
+{% block content %}
+{% if pitching_list %}
+
+	<div class="container">
+		<table class="table table-hover table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>名字</th>
+					<th>球隊</th>
+					<th><a href="/pitching/games_played">出賽</th>
+					<th><a href="/pitching/win"			>勝投</th>
+					<th><a href="/pitching/lose"		>敗投</th>
+					<th><a href="/pitching/pa"			>打席</th>
+					<th><a href="/pitching/inning"		>局數</th>
+					<th><a href="/pitching/so"			>奪三振</th>
+					<th><a href="/pitching/bb"			>保送</th>
+					<th><a href="/pitching/h"			>被安打</th>
+					<th><a href="/pitching/hr"			>被全壘打</th>
+					<th><a href="/pitching/r"			>失分</th>
+					<th><a href="/pitching/er"			>責失分</th>
+					<th><a href="/pitching/go"			>滾地出局</th>
+					<th><a href="/pitching/fo"			>飛球出局</th>
+					<th><a href="/pitching/bb_inning"	>保送/局數</th>
+					<th><a href="/pitching/era"			>自責分率</th>
+					<th><a href="/pitching/whip"		>被上壘率</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for player in pitching_list %}
+				<tr>
+                    <td><a href="/people/{{player.memberID}}">{{player.name}}</a></td>
+                    <td><a href="/team/{{player.teamID}}">{{player.team}}</a></td>
+					<td>{{player.games_played}}</td>
+					<td>{{player.win}}</td>
+					<td>{{player.lose}}</td>
+					<td>{{player.pa}}</td>
+					<td>{{player.inning}}</td>
+					<td>{{player.so}}</td>
+					<td>{{player.bb}}</td>
+					<td>{{player.h}}</td>
+					<td>{{player.hr}}</td>
+					<td>{{player.r}}</td>
+					<td>{{player.er}}</td>
+					<td>{{player.go}}</td>
+					<td>{{player.fo}}</td>
+					<td>{{player.bb_inning_s}}</td>
+					<td>{{player.era_s}}</td>
+					<td>{{player.whip_s}}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+{% endif %}
+
+    <div class="footer">
+        <div class="container">
+            <div class="row row-center">
+                <div class="fb-box col-center">
+    	            <div class="fb-like-box" data-href="https://www.facebook.com/NTUSBLeague" data-width="400" data-height="300" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
