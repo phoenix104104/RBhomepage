@@ -3,7 +3,6 @@ from team import views
 
 urlpatterns = [
 	url('^$', views.index, name='index'),
-	url(r'^login$', views.login, name='login'),
-	url(r'^logout$', views.logout, name='logout'),
-	url(r'', include('social_auth.urls')),
+	url(r'^login$', views.login_view, name='login_view'),
+	url(r'^logout$', views.logout_view, name='logout_view')
 ]

@@ -14,6 +14,8 @@
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="{% static 'css/basic.css' %}" type="text/css">
 	<link rel="stylesheet" href="{% static 'css/jquery-linedtextarea.css' %}" type="text/css">
+	<link rel="stylesheet" href="{% static 'css/formValidation.min.css' %}" type="text/css">
+	
 
 	<link rel="shortcut icon" href="{% static 'images/ntusbleague.jpg' %}">
 
@@ -21,7 +23,9 @@
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<script src="{% static 'js/basic.js' %}"></script>
 	<script src="{% static 'js/jquery-linedtextarea.js' %}"></script>
-
+	<script src="{% static 'js/formValidation.min.js' %}"></script>
+	<script src="{% static 'js/formValidation-bootstrap.min.js' %}"></script>
+	
 </script>
 </head>
 
@@ -71,24 +75,46 @@
 				    	</ul>
 			    	{% else %}
 				    	<ul class="nav navbar-nav navbar-right">
-					      	<li class="dropdown">
-					        	<a href="#" class="dropdown-toggle" data-toggle="dropdown"> 登入<span class="caret"></span></a>
-				        	  	<ul class="dropdown-menu" role="menu">
-				        	  		<form action="/login" method = "POST" role="form">
-				        	  			{% csrf_token %}
-						            	帳號 : <input class="form-control" type="text" name = "id" >
-						            	密碼 : <input class="form-control" type="password" name="password" >
-										<br>
-						            	<input type = "submit" value="login" class="btn btn-default center">
-						            	<br><br>
-					            	</form>
-					          	</ul>
-					        </li> 
+					      	<li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
 				    	</ul>
 			      	{% endif %}
 			    </div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
 		</nav>
+	</div>
+	
+	<!-- hidden login form -->
+	<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+	    	<div class="modal-content">
+	    		<div class="modal-header login_modal_header">
+	        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        		<h3 class="modal-title" id="myModalLabel">Login to Your Account</h3>
+	      		</div>
+	      		<div class="modal-body">
+	      			<form id="loginForm" action="/login" method = "POST" role="form" class="form-horizontal">
+	      				{% csrf_token %}
+			        	<div class="form-group">
+				        	<label class="col-xs-3 control-label">Username</label>
+	                        <div class="col-xs-5">
+	                            <input type="text" class="form-control" name="username" />
+	                        </div>
+				        </div>
+				
+				        <div class="form-group">
+				        	<label class="col-xs-3 control-label">Password</label>
+	                        <div class="col-xs-5">
+	                            <input type="password" class="form-control" name="password" />
+	                        </div>
+
+				        </div>
+						
+						<button type="submit" class="btn btn-success modal-login-btn">Login</button>
+						<span class="pull-right"><a href="#" class="login-link text-center">Forgot your password?</a></span></div>
+			        </form>
+	      		</div>
+	      	</div>
+	    </div>
 	</div>
 
 {% endblock "header" %}

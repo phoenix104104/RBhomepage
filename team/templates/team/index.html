@@ -2,16 +2,12 @@
 
 {% block content %}	
 
-<div id="status">
-</div>
-	<div class="container">
-		{% if user.is_authenticated %}
-			username: {{user.username}}
-		{% else %}
-			user not login!
-		{% endif %}
-        </div>
 
+	<div class="container">
+
+		{% if err %}
+			<p>Your username and password didn't match. Please try again.</p>
+		{% endif %}
 		<div class="row">
 			{% for p in player %}
 				{{p.name}}
@@ -20,4 +16,8 @@
 		</div>
 	</div> <!-- end of container -->
 	
+
+
+
+
 {% endblock content %}
