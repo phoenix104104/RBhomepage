@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     $("textarea").keydown(function(e) {
         
         if(e.keyCode === 9) { // tab was pressed
@@ -46,7 +47,7 @@ $(document).ready(function() {
         }
     });
 
-    if( document.getElementById("warning").value != "None" ){
+    if( warning != "None" && is_login != "True" ){
         $('#login-modal').modal('show');
     }
     

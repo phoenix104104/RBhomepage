@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from models import Member, Game
+from models import Member, Game, Batting, Pitching
+from util import CommaSeparatedString_to_IntegerArray
 
 def index(request, warning=None):
 	player = Member.objects.all()
@@ -17,6 +18,36 @@ def index(request, warning=None):
 	context = {'player': player, 'warning': warning}
 	return render(request, 'team/index.html', context)
 
+
+def show_all_game(request):
+
+	game_list = Game.objects.all().order_by('-date')
+
+	for game in game_list:
+		game.scores = str(game.away_R) + ' : ' + str(game.home_R)
+
+	context = {'game_list': game_list}
+	return render(request, 'team/show_all_game.html', context)
+
+
+def show_game(request, game_id) :
+
+	game = Game.objects.get(id = game_id)
+	
+	all_batting  = Batting.objects.filter(game = game).order_by("order")
+	all_pitching = Pitching.objects.filter(game = game).order_by("order")
+	
+	for batter in all_batting:
+		batter.stat()
+
+	for pitcher in all_pitching:
+		pitcher.stat()
+
+	game.away_scores = CommaSeparatedString_to_IntegerArray(game.away_scores)
+	game.home_scores = CommaSeparatedString_to_IntegerArray(game.home_scores)
+
+	context = {'game': game, 'all_batting': all_batting, 'all_pitching': all_pitching}
+	return render(request, 'team/show_game.html', context)	
 
     
 def login_view(request):

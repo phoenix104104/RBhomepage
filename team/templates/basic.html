@@ -46,17 +46,17 @@
 				        <span class="icon-bar"></span>
 				        <span class="icon-bar"></span>
 			      	</button>
-			      	<a class="navbar-brand" href="/">臺大慢壘聯盟</a>
+			      	<a class="navbar-brand" href="/">Robber Barons</a>
 			    </div>
 				<!-- Collect the nav links, forms, and other content for toggling -->
 			    
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			    	{% block navbar %}
 				    <ul class="nav navbar-nav">
-					    <li><a href="/member">Member</a></li>
-					    <li><a href="/game">Scores</a></li>
-					    <li><a href="/batting/avg">Batting</a></li>
-					    <li><a href="/pitching/win">Pitching</a></li>
+					    <li><a href="/member">成員</a></li>
+					    <li><a href="/game">戰績</a></li>
+					    <li><a href="/batting/avg">打擊排行</a></li>
+					    <li><a href="/pitching/win">投手排行</a></li>
 				    </ul>
 				    {% endblock navbar %}
 			    
@@ -132,7 +132,11 @@
 	</div>
     
     <!-- hidden warning -->
-	<input type="hidden" id="warning" value="{{warning}}" />
+    <script type="text/javascript"> 
+	    var warning = "{{warning}}";
+	    var is_login = "{{user.is_authenticated}}"
+	</script>
+	<!--<input type="hidden" id="warning" value="{{warning}}" />-->
 
 
 </body>

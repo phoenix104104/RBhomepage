@@ -11,26 +11,6 @@
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4">	
 
-		{% if request.user.is_authenticated %}
-		<div class="dorpdown">
-			<div class="btn-group col-md-offset-11">
-				<a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" href="/modgame/{{game.gameID}}">
-					<span class="glyphicon glyphicon-edit"></span> 修改
-				</a>
-				<div class="dropdown-menu">
-					<form action="/mod/{{game.gameID}}" method="POST" role="form">
-					{% csrf_token %} 
-						<div class="form-group">
-						日期 : <input class="form-control short" type="date" name="date" value="{{game.date |date:"Y-m-d"}}">
-						<label for="location">地點：</label>
-						<input class="form-control " type="text" name="location" value="{{game.location}}">
-						<button type="submit" class="btn btn-default btn-xs" name="button" value="header">修改</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		{% endif %}
 			<table class="table table-condensed table-bordered table-hover">
 				<tbody>
 					<tr>
@@ -42,8 +22,8 @@
 						<th>{{game.location}}</th>
 					</tr>
 					<tr>
-						<th>場次編號</th>
-						<th>{{game.gameID}}</th>
+						<th>聯賽</th>
+						<th>{{game.league}}</th>
 					</tr>
 				</tbody>
 			</table>
@@ -54,61 +34,6 @@
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
 
-		{% if request.user.is_authenticated %}
-		<div class="dorpdown">
-			<div class="btn-group col-md-offset-11">
-				<a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" href="/modgame/{{game.gameID}}">
-					<span class="glyphicon glyphicon-edit"></span> 修改
-				</a>
-				<div class="dropdown-menu">
-					<form action="/mod/{{game.gameID}}" method="POST" role="form">
-					{% csrf_token %} 
-					<input type="hidden" name="home" value="{{game.home.teamID}}">
-					<input type="hidden" name="away" value="{{game.away.teamID}}">					
-						<div class="form-group">
-						<table class="table table-condensed table-bordred table hover">
-							<thead>
-								<tr>
-									<th>1</th>
-									<th>2</th>
-									<th>3</th>
-									<th>4</th>
-									<th>5</th>
-									<th>6</th>
-									<th>7</th>
-									<th>R</th>
-									<th>H</th>
-									<th>E</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									{% for score in away_scores %}
-									<th><input class="s" type="text" value="{{score}}" name="score_{{game.away.teamID}}_{{forloop.counter}}"></th>
-									
-									{% endfor %}
-									<th><input class="s" type="text" value="{{away_R}}" name="away_R"></th>
-									<th><input class="s" type="text" value="{{away_H}}" name="away_H"></th>
-									<th><input class="s" type="text" value="{{away_E}}" name="away_E"></th>
-								</tr>
-								<tr>
-									{% for score in home_scores %}
-									<th><input class="s" type="text" value="{{score}}" name="score_{{game.home.teamID}}_{{forloop.counter}}"></th>
-									
-									{% endfor %}
-									<th><input class="s" type="text" value="{{home_R}}" name="home_R"></th>
-									<th><input class="s" type="text" value="{{home_H}}" name="home_H"></th>
-									<th><input class="s" type="text" value="{{home_E}}" name="home_E"></th>
-								</tr>
-							</tbody>
-						</table>
-						<button type="submit" class="btn btn-default btn-xs" name="button" value="gamebox">修改</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		{% endif %}
 			<table class="table table-condensed table-bordered table-hover">
 				<thead>
 					<tr>
@@ -127,32 +52,31 @@
 				</thead>
 				<tbody>
 					<tr>
-						<th><a href="/team/{{game.away.teamID}}">{{game.away.name}}</a></th>
-						{% for score in away_scores %}
+						<th>{{game.away}}</th>
+						{% for score in game.away_scores %}
 							<th>{{score}}</th>
 						{% endfor %}
-						<th>{{away_R}}</th>
-						<th>{{away_H}}</th>
-						<th>{{away_E}}</th>
+						<th>{{game.away_R}}</th>
+						<th>{{game.away_H}}</th>
+						<th>{{game.away_E}}</th>
 					</tr>
 					<tr>
-						<th><a href="/team/{{game.home.teamID}}">{{game.home.name}}</a></th>
-						{% for score in home_scores %}
+						<th>{{game.home}}</th>
+						{% for score in game.home_scores %}
 							<th>{{score}}</th>
 						{% endfor %}
-						<th>{{home_R}}</th>
-						<th>{{home_H}}</th>
-						<th>{{home_E}}</th>
+						<th>{{game.home_R}}</th>
+						<th>{{game.home_H}}</th>
+						<th>{{game.home_E}}</th>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
 
-
-
+	<!-- batting table -->
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-6 col-md-offset-3">
 			<table class="table table-hover table-bordered table-condensed">
 				<thead>
 					<tr>
@@ -168,15 +92,12 @@
 						<th class="form-td">保送</th>
 						<th class="form-td">三振</th>
 						<th class="form-td">犧牲</th>
-						{% if request.user.is_authenticated %}
-						<th class="form-td">修改</th>
-						{% endif %}
 					</tr>					
 				</thead>
 				<tbody>
-					{% for player in away_bat %}
+					{% for player in all_batting %}
 					<tr>
-						<td class="form-name-show"><a href="/people/{{player.member.memberID}}">{{player.member}}</a></td>
+						<td class="form-name-show"><a href="/people/{{player.member.id}}">{{player.member}}</a></td>
 						<td class="form-td">{{player.pa}}</td>
 						<td class="form-td">{{player.ab}}</td>
 						<td class="form-td">{{player.single}}</td>
@@ -186,69 +107,7 @@
 						<td class="form-td">{{player.rbi}}</td>
 						<td class="form-td">{{player.run}}</td>
 						<td class="form-td">{{player.bb}}</td>
-						<td class="form-td">{{player.so}}</td>
-						<td class="form-td">{{player.sf}}</td>
-
-						{% if request.user.is_authenticated %}
-						<td  class="form-td">
-							<div class="dorpdown">
-								<div class="btn-group">
-									<a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" href="/modgame/{{game.gameID}}">
-										<span class="glyphicon glyphicon-edit"></span>
-									</a>
-									<div class="dropdown-menu">
-										<form action="/mod/{{game.gameID}}" method="POST" role="form">
-										{% csrf_token %} 
-											<input type="hidden" name="team" value="{{game.away.teamID}}">
-											<input tpye="hidden" name="sequence" value="{{player.sequence}}">
-											
-											<button type="submit" class="btn btn-default btn-xs" name="button" value="mod_bat">修改</button>
-											<button type="submit" class="btn btn-default btn-xs" name="button" value="del_bat">刪除</button>
-											
-										</form>
-									</div>
-								</div>
-							</div>
-						</td>
-						{% endif %}
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-
-		<div class="col-md-6">
-			<table class="table table-hover table-bordered table-condensed">
-				<thead>
-					<tr>
-						<th class="form-name-show">姓名</th>
-						<th class="form-td">打席</th>
-						<th class="form-td">打數</th>
-						<th class="form-td">一安</th>
-						<th class="form-td">二安</th>
-						<th class="form-td">三安</th>
-						<th class="form-td">全壘</th>
-						<th class="form-td">打點</th>
-						<th class="form-td">得分</th>
-						<th class="form-td">保送</th>
-						<th class="form-td">三振</th>
-						<th class="form-td">犧牲</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for player in home_bat %}
-					<tr>
-						<td class="form-name-show"><a href="/people/{{player.member.memberID}}">{{player.member}}</a></td>
-						<td class="form-td">{{player.pa}}</td>
-						<td class="form-td">{{player.ab}}</td>
-						<td class="form-td">{{player.single}}</td>
-						<td class="form-td">{{player.double}}</td>
-						<td class="form-td">{{player.triple}}</td>
-						<td class="form-td">{{player.hr}}</td>
-						<td class="form-td">{{player.rbi}}</td>
-						<td class="form-td">{{player.run}}</td>
-						<td class="form-td">{{player.bb}}</td>
-						<td class="form-td">{{player.so}}</td>
+						<td class="form-td">{{player.k}}</td>
 						<td class="form-td">{{player.sf}}</td>
 					</tr>
 					{% endfor %}
@@ -257,10 +116,12 @@
 		</div>
 
 	</div>
-	
+	<!-- end of batting table -->
+
+
+	<!-- pitching table -->
 	<div class="row">
-		<!-- away pitcher table -->
-		<div class="col-md-6 team-record">
+		<div class="col-md-6 team-record col-md-offset-3">
 			<table class="table table-hover table-bordered">
 				<thead>
 					<tr>
@@ -300,58 +161,9 @@
 			</table>
 		</div>
 		
-		<!-- home pitcher table -->
-		<div class="col-md-6 team-record">
-			<table class="table table-hover table-bordered">
-				<thead>
-					<tr>
-						<td class="form-name-show">投手</td>
-						<td class="form-td">局數</td>
-						<td class="form-td">面對打席</td>
-						<td class="form-td">被安打</td>
-						<td class="form-td">被全壘打</td>
-						<td class="form-td">四壞</td>
-						<td class="form-td">三振</td>
-						<td class="form-td">失分</td>
-						<td class="form-td">責失</td>
-						<td class="form-td">滾地出局</td>
-						<td class="form-td">飛球出局</td>
-						<td class="form-td">勝敗</td>
-					</tr>
-				</thead>
-
-				<tbody>
-					{% for player in home_pit %}
-					<tr>
-						<td class="form-name-show"><a href="/people/{{player.member.memberID}}">{{player.member}}</a></td>
-						<td class="form-td">{{player.IP}}</td>
-						<td class="form-td">{{player.pa}}</td>
-						<td class="form-td">{{player.h}}</td>
-						<td class="form-td">{{player.hr}}</td>
-						<td class="form-td">{{player.bb}}</td>
-						<td class="form-td">{{player.so}}</td>
-						<td class="form-td">{{player.r}}</td>
-						<td class="form-td">{{player.er}}</td>
-						<td class="form-td">{{player.go}}</td>
-						<td class="form-td">{{player.fo}}</td>
-						<td class="form-td">{{player.wl}}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-
-	</div> <!-- end of row -->
+	</div>
+	<!-- end of pitching table -->
 
 </div>
 
-    <div class="footer">
-        <div class="container">
-            <div class="row row-center">
-                <div class="fb-box col-center">
-    	            <div class="fb-like-box" data-href="https://www.facebook.com/NTUSBLeague" data-width="400" data-height="300" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock content %}
