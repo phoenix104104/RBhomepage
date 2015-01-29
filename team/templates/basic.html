@@ -83,6 +83,7 @@
 		</nav>
 	</div>
 	
+
 	<!-- hidden login form -->
 	<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -94,6 +95,13 @@
 	      		<div class="modal-body">
 	      			<form id="loginForm" action="/login" method = "POST" role="form" class="form-horizontal">
 	      				{% csrf_token %}
+	      				{% if warning %}
+						<div class="alert alert-danger" role="alert">
+							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+							<span class="sr-only">Error:</span>
+						  	{{ warning }}
+						</div>
+	      				{% endif %}
 			        	<div class="form-group">
 				        	<label class="col-xs-3 control-label">Username</label>
 	                        <div class="col-xs-5">
@@ -123,6 +131,10 @@
 		{% block content %}basic template{% endblock content %}
 	</div>
     
+    <!-- hidden warning -->
+	<input type="hidden" id="warning" value="{{warning}}" />
+
+
 </body>
 
 </html>

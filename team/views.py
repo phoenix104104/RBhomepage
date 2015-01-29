@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from models import Member, Game
 
-def index(request, err=None):
+def index(request, warning=None):
 	player = Member.objects.all()
 	if request.user.is_authenticated:
 		print "authenticated user"
@@ -14,7 +14,7 @@ def index(request, err=None):
 		print "username = " + request.user.username
 	else:
 		print "none"
-	context = {'player': player, 'err': err}
+	context = {'player': player, 'warning': warning}
 	return render(request, 'team/index.html', context)
 
 
@@ -38,10 +38,8 @@ def login_view(request):
 				print "Inactive user!"
 				return redirect("/")
 		else:
-			print "User not exist!"
-			#return redirect("/")
-			err = "User not exist!"
-			return index(request, err)
+			warning = "Invalid username or wrong password!"
+			return index(request, warning)
 
 
 def logout_view(request):

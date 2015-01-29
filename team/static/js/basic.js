@@ -28,11 +28,6 @@ $(document).ready(function() {
     $('#loginForm').formValidation({
         excluded: [':disabled'],
         framework: 'bootstrap',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
         fields: {
             username: {
                 validators: {
@@ -50,4 +45,9 @@ $(document).ready(function() {
             }
         }
     });
+
+    if( document.getElementById("warning").value != "None" ){
+        $('#login-modal').modal('show');
+    }
+    
 });
