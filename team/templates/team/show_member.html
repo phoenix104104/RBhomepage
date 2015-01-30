@@ -1,14 +1,13 @@
 
 {% extends "basic.html" %}
 {% block title %}
-	{{thispeople.name}}-個人記錄
+	{{member.name}}-個人記錄
 {% endblock title %}
 
 {% block content %}
-{% if thispeople %}
 
 	<div class="container">
-		<h4>{{name}}</h4>
+		<h4>{{member.name}}</h4>
 		<br>
 		<table class="table table-hover table-bordered table-condensed">
 			<thead>
@@ -37,26 +36,26 @@
 				</tr>
 			</thead>
 			<tbody>
-			{% for hitting in hitting_list %}
+			{% for batting in batting_list %}
 				<tr>
-					<td><a href="/game/{{hitting.gameID}}">{{hitting.date}}</a></td>
-					<td><a href="/team/{{hitting.oppID}}">{{hitting.opp}}</a></td>
-					<td>{{hitting.pa}}</td>
-					<td>{{hitting.ab}}</td>
-					<td>{{hitting.hit}}</td>
-					<td>{{hitting.single}}</td>
-					<td>{{hitting.double}}</td>
-					<td>{{hitting.triple}}</td>
-					<td>{{hitting.hr}}</td>
-					<td>{{hitting.rbi}}</td>
-					<td>{{hitting.r}}</td>
-					<td>{{hitting.bb}}</td>
-					<td>{{hitting.so}}</td>
-					<td>{{hitting.sf}}</td>
-					<td>{{hitting.avg_s}}</td>
-					<td>{{hitting.obp_s}}</td>
-					<td>{{hitting.slg_s}}</td>
-					<td>{{hitting.ops_s}}</td>
+					<td><a href="/game/{{batting.game.id}}">{{batting.game.date}}</a></td>
+					<td>{{batting.opp}}</td>
+					<td>{{batting.pa}}</td>
+					<td>{{batting.ab}}</td>
+					<td>{{batting.hit}}</td>
+					<td>{{batting.single}}</td>
+					<td>{{batting.double}}</td>
+					<td>{{batting.triple}}</td>
+					<td>{{batting.hr}}</td>
+					<td>{{batting.rbi}}</td>
+					<td>{{batting.run}}</td>
+					<td>{{batting.bb}}</td>
+					<td>{{batting.k}}</td>
+					<td>{{batting.sf}}</td>
+					<td>{{batting.avg_s}}</td>
+					<td>{{batting.obp_s}}</td>
+					<td>{{batting.slg_s}}</td>
+					<td>{{batting.ops_s}}</td>
 				</tr>
 			{% endfor %}
 			</tbody>
@@ -89,23 +88,23 @@
 			<tbody>
 				<tr>
 					<td>2014</td>
-					<td>{{hitting_sum.games_played}}</td>
-					<td>{{hitting_sum.pa}}</td>
-					<td>{{hitting_sum.ab}}</td>
-					<td>{{hitting_sum.hit}}</td>
-					<td>{{hitting_sum.single}}</td>
-					<td>{{hitting_sum.double}}</td>
-					<td>{{hitting_sum.triple}}</td>
-					<td>{{hitting_sum.hr}}</td>
-					<td>{{hitting_sum.rbi}}</td>
-					<td>{{hitting_sum.r}}</td>
-					<td>{{hitting_sum.bb}}</td>
-					<td>{{hitting_sum.so}}</td>
-					<td>{{hitting_sum.sf}}</td>
-					<td>{{hitting_sum.avg_s}}</td>
-					<td>{{hitting_sum.obp_s}}</td>
-					<td>{{hitting_sum.slg_s}}</td>
-					<td>{{hitting_sum.ops_s}}</td>
+					<td>{{batting_sum.gp}}</td>
+					<td>{{batting_sum.pa}}</td>
+					<td>{{batting_sum.ab}}</td>
+					<td>{{batting_sum.hit}}</td>
+					<td>{{batting_sum.single}}</td>
+					<td>{{batting_sum.double}}</td>
+					<td>{{batting_sum.triple}}</td>
+					<td>{{batting_sum.hr}}</td>
+					<td>{{batting_sum.rbi}}</td>
+					<td>{{batting_sum.run}}</td>
+					<td>{{batting_sum.bb}}</td>
+					<td>{{batting_sum.k}}</td>
+					<td>{{batting_sum.sf}}</td>
+					<td>{{batting_sum.avg_s}}</td>
+					<td>{{batting_sum.obp_s}}</td>
+					<td>{{batting_sum.slg_s}}</td>
+					<td>{{batting_sum.ops_s}}</td>
 				</tr>
 			</tbody>
 
@@ -214,17 +213,5 @@
 
 	</div>
 
-	
-{% endif %}
-    
-    <div class="footer">
-        <div class="container">
-            <div class="row row-center">
-                <div class="fb-box col-center">
-    	            <div class="fb-like-box" data-href="https://www.facebook.com/NTUSBLeague" data-width="400" data-height="300" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 {% endblock content %}

@@ -112,3 +112,8 @@ table{
     width: 400px;
     background-color: #FFFFFF !important;
 }
+
+.form-horizontal{
+	border-style: bold !important;
+	border-width: 10px !important;
+}

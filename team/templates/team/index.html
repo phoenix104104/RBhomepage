@@ -5,12 +5,9 @@
 
 	<div class="container">
 
-		{% if err %}
-			<p>Your username and password didn't match. Please try again.</p>
-		{% endif %}
 		<div class="row">
 			{% for p in player %}
-				{{p.name}}
+				<a href="/member/{{p.id}}">{{p.name}}</a>
 				<br>
 			{% endfor %}
 		</div>

@@ -95,9 +95,9 @@
 					</tr>					
 				</thead>
 				<tbody>
-					{% for player in all_batting %}
+					{% for player in batting_list %}
 					<tr>
-						<td class="form-name-show"><a href="/people/{{player.member.id}}">{{player.member}}</a></td>
+						<td class="form-name-show"><a href="/member/{{player.member.id}}">{{player.member}}</a></td>
 						<td class="form-td">{{player.pa}}</td>
 						<td class="form-td">{{player.ab}}</td>
 						<td class="form-td">{{player.single}}</td>
@@ -141,12 +141,12 @@
 				</thead>
 
 				<tbody>
-					{% for player in away_pit %}
+					{% for player in pitching_list %}
 					<tr>
-						<td class="form-name-show"><a href="/people/{{player.member.memberID}}">{{player.member}}</a></td>
+						<td class="form-name-show"><a href="/member/{{player.member.id}}">{{player.member}}</a></td>
 						<td class="form-td">{{player.IP}}</td>
 						<td class="form-td">{{player.pa}}</td>
-						<td class="form-td">{{player.h}}</td>
+						<td class="form-td">{{player.hit}}</td>
 						<td class="form-td">{{player.hr}}</td>
 						<td class="form-td">{{player.bb}}</td>
 						<td class="form-td">{{player.so}}</td>
