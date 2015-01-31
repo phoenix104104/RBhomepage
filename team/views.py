@@ -5,7 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from models import League, Member, Game, Batting, Pitching
-from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray
+from parse_record import parse_game_record
+from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray, gather_team_info_from_web, text_to_table
+
 
 def index(request, warning=None):
 	player = Member.objects.all()
@@ -81,10 +83,10 @@ def show_member(request, member_id) :
 			batting_sum.stat()
 
 			# accumulated statistic
-			player.avg_s	= batting_sum.avg_s
-			player.slg_s	= batting_sum.slg_s
-			player.obp_s	= batting_sum.obp_s
-			player.ops_s	= batting_sum.ops_s
+			player.avg_s = batting_sum.avg_s
+			player.slg_s = batting_sum.slg_s
+			player.obp_s = batting_sum.obp_s
+			player.ops_s = batting_sum.ops_s
 			
 			# opponent team
 			if( player.game.home == 'RB' ):
@@ -96,79 +98,52 @@ def show_member(request, member_id) :
 
 		
 
-	'''
 	# --- pitching
-	game_all  	  = Pitching.objects.filter(member__memberID = member_id).order_by("game")
+	pitching_all  = Pitching.objects.filter(member__id = member_id).order_by("game")
+	pitching_sum  = statPitching()
 	pitching_list = []
-	pitching_sum  = Pitcher()
 	
-	if game_all.exists() :
-		for game_detail in game_all:
-			pitcher 		= Pitcher()
-			pitcher.win 	= game_detail.win
-			pitcher.lose 	= game_detail.lose
-			pitcher.outs 	= game_detail.outs
-			pitcher.pa 		= game_detail.pa
-			pitcher.so 		= game_detail.so
-			pitcher.bb 		= game_detail.bb
-			pitcher.h		= game_detail.h
-			pitcher.hr		= game_detail.hr
-			pitcher.r 		= game_detail.r
-			pitcher.er 		= game_detail.er
-			pitcher.go 		= game_detail.go
-			pitcher.fo 		= game_detail.fo
+	if pitching_all.exists() :
+		for pitching in pitching_all:
+			player = statPitcher()
+			player.copy(pitching)
+			player.stat()
 
-			pitcher.games_played = 1
-			pitcher.stat()
-			pitching_sum.add(pitcher)
+			pitching_sum.add(player)
 			pitching_sum.stat()
 
 			# accumulated statistic
-			pitcher.bb_inning_s 	= pitching_sum.bb_inning_s
-			pitcher.era_s 	= pitching_sum.era_s
-			pitcher.whip_s 	= pitching_sum.whip_s
+			player.era_s  = pitching_sum.era_s
+			player.whip_s = pitching_sum.whip_s
 			
-			# game information
-			game 			= game_detail.game
-			pitcher.date 	= str(game.date)
-			pitcher.gameID 	= str(game.gameID)
-
 			# opponent team
-			if( game_detail.team == game.home ):
-				opp = game.away	
+			if( player.game.home == 'RB' ):
+				player.opp = player.game.away
 			else:
-				opp = game.home
+				player.opp = player.game.home
 
-			pitcher.opp 	= str(opp)
-			pitcher.oppID 	= str(opp.teamID)
-
-			pitching_list.append(pitcher)
+			pitching_list.append(player)
 
 	
-	'''
-	context = {'member': member, 'batting_list': batting_list, 'batting_sum': batting_sum}
+	context = {'member': member, 'batting_list': batting_list, 'batting_sum': batting_sum, 'pitching_list': pitching_list, 'pitching_sum': pitching_sum}
 
 	return render(request, 'team/show_member.html', context)
 
 
     
 def login_view(request):
-	print "login view!"
+	
 	if request.method != 'POST':
 		return redirect("/")
 	else:
 		username = request.POST.get("username")
 		password = request.POST.get("password")
-		print "username = %s" %username
 		user = authenticate(username = username, password = password)
 		if user is not None:
 			if user.is_active:
 				login(request, user)
-				print "%s login!" %username
 				return redirect("/")
-				#return index(request)
 			else:
-				print "Inactive user!"
 				return redirect("/")
 		else:
 			warning = "Invalid username or wrong password!"
@@ -184,13 +159,89 @@ def logout_view(request):
 @login_required(login_url='/admin')
 def add_game(request):
 
-	if request.method != 'POST':
+	if request.method != "POST":
+		league_id 	= -1
+		date        = None
+		location    = ""
+		record 	 	= ""
+		away_name 	= ""
+		away_scores = [0]*7
+		home_name 	= ""
+		home_scores = [0]*7
+		record_text = ""
+		message 	= ""
+		warning 	= ""
+		preview 	= False
 
 		league_list = League.objects.all()
-		context = {'league_list':league_list}
+
+		context = {'league_list':league_list, 'league_id': league_id, 'date': date, 'location': location, 'away_name': away_name, 'away_scores': away_scores, 'home_name': home_name, 'home_scores': home_scores, 'record_text': record_text, 'preview': preview, 'warning': warning, 'message': message}
 
 		return render(request, 'team/add_game.html', context)
 
+	else:
+
+		league_id 		= request.POST["league_id"]
+		date        	= request.POST["date"]
+		location    	= request.POST["location"].encode('utf8')
+		record_text		= request.POST["record_text"]
+		batting_table 	= []
+		pitching_table 	= []
+
+		away_name, away_scores = gather_team_info_from_web(request, 'away')
+		home_name, home_scores = gather_team_info_from_web(request, 'home')
+			
+		message 	= ""
+		warning 	= ""
+		preview 	= False
+
+		if 'add-new-league-btn' in request.POST:
+			print "add new league!"
+			league_name = request.POST["new-league-name"]
+
+			if league_name != None:
+
+				league = League.objects.filter(name = league_name)
+				if( league.exists() ):
+					warning = "League name %s already exists." %league_name
+				else:
+					league = League(name=league_name)
+					league.save()
+					message = 'Add new league: %s' %league_name
+		
+		elif 'preview-btn' in request.POST:
+
+			league 		 = League.objects.get(pk=league_id)
+			record_table = text_to_table(record_text.encode('utf8'))
+
+			
+			if( away_name.upper() == 'RB' ):
+				away_table = record_table
+				home_table = []
+			else:
+				away_table = []
+				home_table = record_table
+
+			rd_game, warning = parse_game_record(away_name, away_scores, away_table, \
+	                        	                 home_name, home_scores, home_table)
+
+			if( warning == "" ):
+				message = "Preview record table!"
+				preview = True
+
+				if( away_name.upper() == 'RB' ):
+					batting_table  = rd_game.away.batter_table
+					pitching_table = rd_game.away.pitcher_table
+				else:
+					batting_table  = rd_game.home.batter_table
+					pitching_table = rd_game.home.pitcher_table
+
+
+		league_list = League.objects.all()
+
+		context = {'league_list':league_list, 'league_id': league_id, 'date': date, 'location': location, 'away_name': away_name, 'away_scores': away_scores, 'home_name': home_name, 'home_scores': home_scores, 'record_text': record_text, 'preview': preview, 'warning': warning, 'message': message, 'record_game': rd_game, 'batting_table': batting_table, 'pitching_table': pitching_table}
+
+		return render(request, 'team/add_game.html', context)
 	"""
 	else :
 

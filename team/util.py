@@ -19,6 +19,39 @@ def IntegerArray_to_CommaSeparatedString(input):
 
     return output
 
+def table_to_text(table):
+    lines = ""
+    for row in table:
+        for col in row:
+            lines += "%s\t" %col
+        lines += "\n"
+    
+    return lines
+
+def text_to_table(text):
+    
+    table = []
+    lines = text.split('\n')
+    for line in lines:
+        data = line.split()
+        data = filter(None, data)
+        if len(data) != 0:
+            table.append(data)
+    
+    return table
+
+def gather_team_info_from_web(request, HA):
+
+    team_name  = request.POST[HA + "_name"].encode('utf8')
+    scores = []
+    for i in range(1, 8):
+        score = request.POST[HA + "_score_" + str(i)]
+        if( not score ):
+            break
+        scores.append(int(score))
+
+    return (team_name, scores)
+
 # collect all statistic for webpage
 class statBatting():
 	game    = None
