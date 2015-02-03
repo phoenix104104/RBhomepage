@@ -33,7 +33,6 @@
 
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
-
 			<table class="table table-condensed table-bordered table-hover">
 				<thead>
 					<tr>
@@ -73,6 +72,20 @@
 			</table>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<table class="table table-condensed table-bordered table-hover">
+				{% for row in game.batter_table %}
+				<tr>
+					{% for col in row %}
+						<td>{{col}}</td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+
 
 	<!-- batting table -->
 	<div class="row">
@@ -149,8 +162,8 @@
 						<td class="form-td">{{player.hit}}</td>
 						<td class="form-td">{{player.hr}}</td>
 						<td class="form-td">{{player.bb}}</td>
-						<td class="form-td">{{player.so}}</td>
-						<td class="form-td">{{player.r}}</td>
+						<td class="form-td">{{player.k}}</td>
+						<td class="form-td">{{player.run}}</td>
 						<td class="form-td">{{player.er}}</td>
 						<td class="form-td">{{player.go}}</td>
 						<td class="form-td">{{player.fo}}</td>

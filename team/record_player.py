@@ -198,37 +198,39 @@ class rdBatter:
 
 class rdPitcher:
     def __init__(self, name=""):
-        self.name = name
-        self.TBF = 0    # total batters faced 面對人次
-        self.Out = 0
-        self.H   = 0
-        self.HR  = 0
-        self.BB  = 0
-        self.K   = 0
-        self.Run = 0
-        self.ER  = 0
-        self.ERA = 0
-        self.GO  = 0
-        self.FO  = 0
-        self.IP  = ''
+        self.name   = name
+        self.TBF    = 0    # total batters faced 面對人次
+        self.OUT    = 0
+        self.H      = 0
+        self.HR     = 0
+        self.BB     = 0
+        self.K      = 0
+        self.Run    = 0
+        self.ER     = 0
+        self.ERA    = 0
+        self.GO     = 0
+        self.FO     = 0
+        self.IP     = ''
+        self.WIN    = 0
+        self.LOSE   = 0
 
     def getERA(self):
         if( self.ER == 0 ):
             self.ERA = 0
         else:
-            if( self.Out == 0 ):
+            if( self.OUT == 0 ):
                 self.ERA = float("inf")
             else:
-                self.ERA = float(self.ER) / self.Out * (7*3)
+                self.ERA = float(self.ER) / self.OUT * (7*3)
         
         return self.ERA
 
     def calculate_IP(self):
-        if( self.Out == 0 ):
+        if( self.OUT == 0 ):
             self.IP = '0.0'
         else:
-            N = int(self.Out / 3)
-            m = self.Out % 3
+            N = int(self.OUT / 3)
+            m = self.OUT % 3
             self.IP = '%d.%d' %(N, m)
 
         return self.IP
@@ -259,8 +261,8 @@ class rdPitcher:
             elif( (pa.result == "FC") & (pa.out > 0) ):
                 self.GO += 1
             
-            #print "pitcher add PA(%s), out = %d" %(pa.raw_str, pa.out)
-            self.Out += pa.out
+            #print "pitcher add PA(%s), OUT = %d" %(pa.raw_str, pa.out)
+            self.OUT += pa.out
             self.Run += pa.run
             if (isER and pa.result != "E"):
                 self.ER += pa.run

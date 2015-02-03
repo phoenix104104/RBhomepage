@@ -58,8 +58,10 @@ def show_game(request, game_id) :
 
 		pitching_list.append(player)
 
-	game.away_scores = CommaSeparatedString_to_IntegerArray(game.away_scores)
-	game.home_scores = CommaSeparatedString_to_IntegerArray(game.home_scores)
+	game.away_scores 	= CommaSeparatedString_to_IntegerArray(game.away_scores)
+	game.home_scores 	= CommaSeparatedString_to_IntegerArray(game.home_scores)
+	game.batter_table 	= text_to_table(game.batter_table)
+	game.pitcher_table 	= text_to_table(game.pitcher_table)
 
 	context = {'game': game, 'batting_list': batting_list, 'pitching_list': pitching_list}
 	return render(request, 'team/show_game.html', context)	
@@ -241,7 +243,15 @@ def add_game(request):
 				for P in team.batters:
 					P.name = (P.name).decode('utf8')
 
+				for P in team.pitchers:
+					P.name = (P.name).decode('utf8')
 
+				# add rows for changing pitchers
+				team.pitchers.append([])
+				team.pitchers.append([])
+				team.pitchers.append([])
+
+				
 				# download PTT format
 				"""
 				if 'download-btn' in request.POST:
@@ -285,23 +295,24 @@ def add_game(request):
 					# create and save new Batting object
 					nBatter = len(team.batters)
 					for i in range(1, nBatter):
-						member_id = int(request.POST.get("batter_id_" + str(i), ""))
-						member = Member.objects.get(id = member_id)
+						member_id = int(request.POST.get("batter_%d_id"%i, ""))
 
-						if member.exists():
-							pa		= int(request.POST.get("pa_" 	 + str(i), ""))
-							single	= int(request.POST.get("single_" + str(i), ""))
-							double	= int(request.POST.get("double_" + str(i), ""))
-							triple	= int(request.POST.get("triple_" + str(i), ""))		
-							hr		= int(request.POST.get("hr_" 	 + str(i), ""))
-							bb		= int(request.POST.get("bb_" 	 + str(i), ""))
-							rbi		= int(request.POST.get("rbi_" 	 + str(i), ""))
-							run		= int(request.POST.get("run_" 	 + str(i), ""))
-							k		= int(request.POST.get("k_" 	 + str(i), ""))
-							sf		= int(request.POST.get("sf_" 	 + str(i), ""))
-							field	= request.POST.get("sf_" + str(i), "")
+						if( member_id != 0 ):
+							member  = Member.objects.get(id = member_id)
+
+							pa		= int(request.POST.get("batter_%d_pa" 	 %i , ""))
+							single	= int(request.POST.get("batter_%d_single"%i , ""))
+							double	= int(request.POST.get("batter_%d_double"%i , ""))
+							triple	= int(request.POST.get("batter_%d_triple"%i , ""))
+							hr		= int(request.POST.get("batter_%d_hr" 	 %i , ""))
+							bb		= int(request.POST.get("batter_%d_bb" 	 %i , ""))
+							rbi		= int(request.POST.get("batter_%d_rbi" 	 %i , ""))
+							run		= int(request.POST.get("batter_%d_run" 	 %i , ""))
+							k		= int(request.POST.get("batter_%d_k" 	 %i , ""))
+							sf		= int(request.POST.get("batter_%d_sf" 	 %i , ""))
+							field	=     request.POST.get("batter_%d_field" %i , "")
 							
-							batting = Batting()
+							batting 		= Batting()
 							batting.game 	= game
 							batting.member	= member
 							batting.order 	= i
@@ -318,6 +329,61 @@ def add_game(request):
 							batting.field 	= field  
 							 
 							batting.save()
+
+						
+					# create and save new Batting object
+					nPitcher = len(team.pitchers)
+					for i in range(1, nPitcher):
+						member_id = int(request.POST.get("pitcher_%d_id"%i, ""))
+
+						if( member_id != 0 ):
+							member  = Member.objects.get(id = member_id)
+							outs	= int(request.POST.get("pitcher_%d_outs" %i , ""))
+							pa		= int(request.POST.get("pitcher_%d_pa" 	 %i , ""))
+							hit		= int(request.POST.get("pitcher_%d_hit"	 %i , ""))
+							hr		= int(request.POST.get("pitcher_%d_hr" 	 %i , ""))
+							bb		= int(request.POST.get("pitcher_%d_bb" 	 %i , ""))
+							k		= int(request.POST.get("pitcher_%d_k" 	 %i , ""))
+							run		= int(request.POST.get("pitcher_%d_run"  %i , ""))
+							er		= int(request.POST.get("pitcher_%d_er" 	 %i , ""))
+							go		= int(request.POST.get("pitcher_%d_go" 	 %i , ""))
+							fo		= int(request.POST.get("pitcher_%d_fo" 	 %i , ""))
+							win		= 	  request.POST.get("pitcher_%d_win"  %i , "")
+							lose	= 	  request.POST.get("pitcher_%d_lose" %i , "")
+							
+							if( win != '' ):
+								win = 1
+							else:
+								win = 0
+
+							if( lose != '' ):
+								lose = 1
+							else:
+								lose = 0
+							
+
+							pitching 		= Pitching()
+							pitching.game 	= game
+							pitching.member	= member
+							pitching.order 	= i
+							pitching.outs   = outs
+							pitching.pa     = pa
+							pitching.hit   	= hit
+							pitching.hr    	= hr
+							pitching.bb    	= bb     
+							pitching.k     	= k      
+							pitching.run   	= run
+							pitching.er    	= er
+							pitching.go    	= go
+							pitching.fo    	= fo
+							pitching.win   	= win
+							pitching.lose  	= lose
+							 
+							pitching.save()
+				
+
+				return redirect("/game/"+str(game.id))
+
 					
 
 		context = {'league_list':league_list, 'league_id': league_id, 'date': date, 'location': location, 'away_name': away_name, 'away_scores': away_scores, 'home_name': home_name, 'home_scores': home_scores, 'record_text': record_text, 'warning': warning, 'message': message, 'record_game': rd_game, 'team': team, 'member_list': member_list}

@@ -145,8 +145,8 @@ class statPitching():
 	hit     = 0
 	hr      = 0
 	bb      = 0
-	so      = 0
-	r       = 0
+	k       = 0
+	run     = 0
 	er      = 0
 	go      = 0
 	fo      = 0
@@ -192,11 +192,11 @@ class statPitching():
 		self.member = pitching.member
 		self.outs   = pitching.outs
 		self.pa     = pitching.pa
-		self.so     = pitching.so
+		self.k      = pitching.k
 		self.bb     = pitching.bb
 		self.hit    = pitching.hit
 		self.hr     = pitching.hr
-		self.r      = pitching.r
+		self.run    = pitching.run
 		self.er     = pitching.er
 		self.go     = pitching.go
 		self.fo     = pitching.fo
@@ -207,11 +207,11 @@ class statPitching():
 	def add(self, player):
 		self.outs   += player.outs
 		self.pa     += player.pa
-		self.so     += player.so
+		self.k      += player.k
 		self.bb     += player.bb
 		self.hit    += player.hit
 		self.hr     += player.hr
-		self.r      += player.r
+		self.run    += player.run
 		self.er     += player.er
 		self.go     += player.go
 		self.fo     += player.fo
