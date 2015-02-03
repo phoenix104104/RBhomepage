@@ -8,7 +8,7 @@ from dump_record import make_PTT_format, make_database_format, make_web_table
 
 def check_least_out(pa):
     out = 0
-    one_out = ["G", "F", "K", "SF", "IF", "CB", "IB", "FO"]
+    one_out = ["G", "F", "K", "SF", "IF", "CB", "IB", "FO", "DO"]
     if( pa.result in one_out ):
         out = 1
     elif( pa.result == "DP" ):
@@ -72,25 +72,25 @@ def parse_PA(team, order, turn, inning, curr_order):
     batter = curr_order[order] # pointer to current batter
     
 
-    if( s[0] == 'N' ): # no play
+    if( s[0] == 'NP' ): # no play
         pa.isPlay = False
-
+        pa.result = s[0]
     else:
         pa.isPlay = True
         while( change_pitcher(s) or change_batter(s) ):
 
             if( change_pitcher(s) ):
-                no = s[0][1:].upper()
-                pa.change_pitcher = no
+                name = s[0][1:].upper()
+                pa.change_pitcher = name
                 s = s[1:]
 
             if( change_batter(s)  ):  # change batter
-                no = s[0][1:].upper()
+                name = s[0][1:].upper()
                 idx = team.batters.index(batter) # current batter index
 
-                batter = team.find_batter(no)
-                if( batter == None or no == "OB" ): # may exist multiple OB
-                    batter = rdBatter('R', no)
+                batter = team.find_batter(name)
+                if( batter == None or name == "OB" ): # may exist multiple OB
+                    batter = rdBatter('R', name, 'R')
                     team.batters.insert(idx+1, batter)
 
                 curr_order[order] = batter
@@ -190,12 +190,12 @@ def parse_pitcher_info(team, pitchers):
         
         # change pitcher
         if( pa.change_pitcher != None ):
-            no = pa.change_pitcher
+            name = pa.change_pitcher
 
             # find whether pitcher had been on field before
             is_new_pitcher = True
             for p in pitchers:
-                if p.number == no:
+                if p.name == name:
                     pitcher = p
                     is_new_pitcher = False
                     break
@@ -234,12 +234,12 @@ def print_order_table(table):
         for col in row:
             batter  = col[0]
             pa      = col[1]
-            sys.stdout.write("%2s  (%d)%-12s" %(batter.number, pa.out, pa.raw_str))
+            sys.stdout.write("%2s  (%d)%-12s" %(batter.name, pa.out, pa.raw_str))
         sys.stdout.write('\n')
 
 def print_batter(batters):
     for p in batters:
-        sys.stdout.write("%2s  %2s " %(p.order, p.number) )
+        sys.stdout.write("%2s  %2s " %(p.order, p.name) )
         for pa in p.PAs:
             sys.stdout.write("(%d)%-12s " %(pa.column, pa.raw_str) )
         sys.stdout.write('\n')
@@ -317,14 +317,14 @@ def make_team(team_name, scores, str_table):
             break
 
         order = str(r+1)
-        no    = row[0]
+        name  = row[0]
         pos   = row[1].upper()
         PAs   = row[2:]
-        team.batters.append( rdBatter(order, no, pos) )
+        team.batters.append( rdBatter(order, name, pos) )
         team.order_table.append( PAs )
 
         if( pos == 'P' ):
-            team.pitchers.append( rdPitcher(no) )
+            team.pitchers.append( rdPitcher(name) )
 
     return team, err
 

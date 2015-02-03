@@ -3,11 +3,14 @@ from django.db import models
 # Create your models here.
 class Member(models.Model):
 	id 		= models.AutoField(primary_key=True)
-	name 	= models.CharField(max_length=100)
+	name 	= models.CharField(max_length=100, default="")
 	number  = models.IntegerField(default=0)
 
 	def __unicode__(self):
-		return self.name
+		return "%s(%d)" %(self.name, self.number)
+
+	class Meta:
+		ordering = ["number"]
 
 
 class League(models.Model):
@@ -18,20 +21,23 @@ class League(models.Model):
 
 
 class Game(models.Model):
-	id			= models.AutoField(primary_key=True)
-	league      = models.ForeignKey(League)
-	date        = models.DateField(blank=True)
-	location    = models.CharField(max_length=200)
-	away        = models.CharField(max_length=200)
-	home        = models.CharField(max_length=200)
-	away_scores = models.CharField(max_length=200)
-	away_R      = models.IntegerField()
-	away_H      = models.IntegerField()
-	away_E      = models.IntegerField()
-	home_scores = models.CharField(max_length=200)
-	home_R      = models.IntegerField()
-	home_H      = models.IntegerField()
-	home_E      = models.IntegerField()
+	id				= models.AutoField(primary_key=True)
+	league      	= models.ForeignKey(League)
+	date        	= models.DateField(blank=True)
+	location    	= models.CharField(max_length=200, default="")
+	away        	= models.CharField(max_length=200, default="")
+	away_scores 	= models.CharField(max_length=200, default="")
+	away_R      	= models.IntegerField(default=0)
+	away_H      	= models.IntegerField(default=0)
+	away_E      	= models.IntegerField(default=0)
+	home        	= models.CharField(max_length=200, default="")
+	home_scores 	= models.CharField(max_length=200, default="")
+	home_R      	= models.IntegerField(default=0)
+	home_H      	= models.IntegerField(default=0)
+	home_E      	= models.IntegerField(default=0)
+	record 			= models.TextField(default="")
+	batter_table 	= models.TextField(default="")
+	pitcher_table 	= models.TextField(default="")
 
 	def __unicode__(self):
 		return self.away + ' vs ' + self.home + '  ' + str(self.date)
@@ -39,17 +45,18 @@ class Game(models.Model):
 class Batting(models.Model):
 	game    = models.ForeignKey(Game)
 	member  = models.ForeignKey(Member)
-	order   = models.IntegerField()
-	pa      = models.IntegerField()
-	single  = models.IntegerField()
-	double  = models.IntegerField()
-	triple  = models.IntegerField()
-	hr      = models.IntegerField()
-	rbi     = models.IntegerField()
-	run     = models.IntegerField()
-	bb      = models.IntegerField()
-	k       = models.IntegerField()
-	sf      = models.IntegerField()
+	order   = models.IntegerField(default=0)
+	pa      = models.IntegerField(default=0)
+	single  = models.IntegerField(default=0)
+	double  = models.IntegerField(default=0)
+	triple  = models.IntegerField(default=0)
+	hr      = models.IntegerField(default=0)
+	rbi     = models.IntegerField(default=0)
+	run     = models.IntegerField(default=0)
+	bb      = models.IntegerField(default=0)
+	k       = models.IntegerField(default=0)
+	sf      = models.IntegerField(default=0)
+	field   = models.CharField(max_length=10, default="")
 
 
 	def __unicode__(self):
@@ -59,19 +66,19 @@ class Batting(models.Model):
 class Pitching(models.Model):
 	game    = models.ForeignKey(Game)
 	member  = models.ForeignKey(Member)
-	order   = models.IntegerField()
-	outs    = models.IntegerField()
-	pa      = models.IntegerField()
-	hit     = models.IntegerField()
-	hr      = models.IntegerField()
-	bb      = models.IntegerField()
-	so      = models.IntegerField()
-	r       = models.IntegerField()
-	er      = models.IntegerField()
-	go      = models.IntegerField()
-	fo      = models.IntegerField()
-	win     = models.IntegerField()
-	lose    = models.IntegerField()
+	order   = models.IntegerField(default=0)
+	outs    = models.IntegerField(default=0)
+	pa      = models.IntegerField(default=0)
+	hit     = models.IntegerField(default=0)
+	hr      = models.IntegerField(default=0)
+	bb      = models.IntegerField(default=0)
+	so      = models.IntegerField(default=0)
+	r       = models.IntegerField(default=0)
+	er      = models.IntegerField(default=0)
+	go      = models.IntegerField(default=0)
+	fo      = models.IntegerField(default=0)
+	win     = models.IntegerField(default=0)
+	lose    = models.IntegerField(default=0)
 	
 	def __unicode__(self):
 		return self.member.name + ' ' + str(self.game.date) + ' ' + self.game.home + 'vs' + self.game.away

@@ -199,86 +199,155 @@ Example:
 				<input type="submit" class="btn btn-success" name="download-btn" value="下載PTT記錄檔">
 			</div>
 		</div>
+		
+		<br>
+
+	    <div class="preview">
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3">
+					<table class="table table-condensed table-bordered fixed-width table-hover">
+						<thead>
+							<tr>
+								<th></th>
+								<th>1</th>
+								<th>2</th>
+								<th>3</th>
+								<th>4</th>
+								<th>5</th>
+								<th>6</th>
+								<th>7</th>
+								<th>R</th>
+								<th>H</th>
+								<th>E</th>
+							</tr>
+						</thead>
+						{% if record_game %}
+						<tbody>
+							<tr>
+								<th>
+									{{record_game.away.name}}
+								</th>
+								{% for score in record_game.away.scores %}
+									<th>{{score}}</th>
+								{% endfor %}
+								<th>{{record_game.away.R}}</th>
+								<th>{{record_game.away.H}}</th>
+								<th>{{record_game.away.E}}</th>
+							</tr>
+							<tr>
+								<th>
+									{{record_game.home.name}}
+								</th>
+								{% for score in record_game.home.scores %}
+									<th>{{score}}</th>
+								{% endfor %}
+								<th>{{record_game.home.R}}</th>
+								<th>{{record_game.home.H}}</th>
+								<th>{{record_game.home.E}}</th>
+							</tr>
+						</tbody>
+						{% endif %}
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<table class="table table-condensed table-bordered table-hover">
+						{% for row in team.batter_table %}
+						<tr>
+							{% for col in row %}
+								<td>{{col}}</td>
+							{% endfor %}
+						</tr>
+						{% endfor %}
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<table class="table table-condensed table-bordered table-hover">
+						{% for row in team.pitcher_table %}
+						<tr>
+							{% for col in row %}
+								<td>{{col}}</td>
+							{% endfor %}
+						</tr>
+						{% endfor %}
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- end of preview -->
+
+		<br>
+		<div class="game-statistic">
+
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1">
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<td>打者</td>
+								<td>守位</td>
+								<td>打席</td>
+								<td>一安</td>
+								<td>二安</td>
+								<td>三安</td>
+								<td>全壘打</td>
+								<td>打點</td>
+								<td>得分</td>
+								<td>保送</td>	
+								<td>三振</td>
+								<td>犧牲打</td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for batter in team.batters %}
+							<tr>
+								<td class="form-name">
+									<select class="form-control" name="batter_id_{{forloop.counter}}">
+									<option value = 0> -- </option>
+										{% for member in member_list %}
+											{% if member.name == batter.name %}
+												<option value="{{member.id}}" selected>({{member.number}}){{member.name}}</option>
+											{% else %}
+												<option value="{{member.id}}">({{member.number}}){{member.name}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+								</td>
+								<td><input class="form-control" size="1" type="text" name="field_{{forloop.counter}}" value="{{batter.pos}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pa_{{forloop.counter}}" value="{{batter.PA}}"></td>
+								<td><input class="form-control" size="1" type="text" name="single_{{forloop.counter}}" value="{{batter.B1}}"></td>
+								<td><input class="form-control" size="1" type="text" name="double_{{forloop.counter}}" value="{{batter.B2}}"></td>
+								<td><input class="form-control" size="1" type="text" name="triple_{{forloop.counter}}" value="{{batter.B3}}"></td>
+								<td><input class="form-control" size="1" type="text" name="hr_{{forloop.counter}}" value="{{batter.HR}}"></td>
+								<td><input class="form-control" size="1" type="text" name="rbi_{{forloop.counter}}" value="{{batter.RBI}}"></td>
+								<td><input class="form-control" size="1" type="text" name="run_{{forloop.counter}}" value="{{batter.RUN}}"></td>
+								<td><input class="form-control" size="1" type="text" name="bb_{{forloop.counter}}" value="{{batter.BB}}"></td>
+								<td><input class="form-control" size="1" type="text" name="k_{{forloop.counter}}" value="{{batter.K}}"></td>
+								<td><input class="form-control" size="1" type="text" name="sf_{{forloop.counter}}" value="{{batter.SF}}"></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- end of game-statistic -->
+		
+		<br>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5 button">
+				<input type="submit" class="btn btn-success" name="save-game-btn" value="確認新增比賽">
+			</div>
+		</div>
+
 	</form>
 	
-
 	<br>
-	{% if preview %}
-    <div class="preview">
-		<div class="row">
-			<div class="col-md-6 col-md-offset-3">
-				<table class="table table-condensed table-bordered fixed-width table-hover">
-					<thead>
-						<tr>
-							<th></th>
-							<th>1</th>
-							<th>2</th>
-							<th>3</th>
-							<th>4</th>
-							<th>5</th>
-							<th>6</th>
-							<th>7</th>
-							<th>R</th>
-							<th>H</th>
-							<th>E</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th>
-								{{record_game.away.name}}
-							</th>
-							{% for score in record_game.away.scores %}
-								<th>{{score}}</th>
-							{% endfor %}
-							<th>{{record_game.away.R}}</th>
-							<th>{{record_game.away.H}}</th>
-							<th>{{record_game.away.E}}</th>
-						</tr>
-						<tr>
-							<th>
-								{{record_game.home.name}}
-							</th>
-							{% for score in record_game.home.scores %}
-								<th>{{score}}</th>
-							{% endfor %}
-							<th>{{record_game.home.R}}</th>
-							<th>{{record_game.home.H}}</th>
-							<th>{{record_game.home.E}}</th>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
-				<table class="table table-condensed table-bordered table-hover">
-					{% for row in batting_table %}
-					<tr>
-						{% for col in row %}
-							<td>{{col}}</td>
-						{% endfor %}
-					</tr>
-					{% endfor %}
-				</table>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
-				<table class="table table-condensed table-bordered table-hover">
-					{% for row in pitching_table %}
-					<tr>
-						{% for col in row %}
-							<td>{{col}}</td>
-						{% endfor %}
-					</tr>
-					{% endfor %}
-				</table>
-			</div>
-		</div>
-	</div>
-	{% endif %}
-
+	<br>
+	<br>
 </div>
 
 {% endblock content %}

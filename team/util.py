@@ -23,6 +23,9 @@ def table_to_text(table):
     lines = ""
     for row in table:
         for col in row:
+            if( col == ""  ):  # handle space cell
+                col = "-"
+
             lines += "%s\t" %col
         lines += "\n"
     
@@ -33,10 +36,12 @@ def text_to_table(text):
     table = []
     lines = text.split('\n')
     for line in lines:
-        data = line.split()
-        data = filter(None, data)
-        if len(data) != 0:
-            table.append(data)
+        row = line.split()
+        row = filter(None, row)
+
+        row = [col.replace("-", "") for col in row]
+        if( len(row) ):
+            table.append(row)
     
     return table
 

@@ -111,12 +111,12 @@ def make_batter_table(team):
         row[0] = order
 
 
-        if( player[n].number == 'N' ):
-            num = "新生"
+        if( player[n].name == 'N' ):
+            name = "新生"
         else:
-            num = player[n].number
+            name = player[n].name
 
-        row[1] = num
+        row[1] = name
 
         for i in range(len(player[n].PAs) ):
             pa = player[n].PAs[i]
@@ -138,7 +138,7 @@ def make_pitcher_table(team):
 
     for pitcher in pitchers:
         row = []
-        row.append(pitcher.number)
+        row.append(pitcher.name)
         row.append(pitcher.IP)
         row.append(pitcher.TBF)
         row.append(pitcher.H)
@@ -181,10 +181,10 @@ def make_team_PTTtable(team, isAddColor=True):
 
         posts += "%2s. " %order
 
-        if( player[n].number == 'N' ):
+        if( player[n].name == 'N' ):
             num = "新生"
         else:
-            num = player[n].number
+            num = player[n].name
 
         space = " " * (6 - big5len(num) ) 
         posts += "%s%s%3s  " %(num, space, player[n].pos)
@@ -215,7 +215,7 @@ def make_pitcher_PTTtable(pitchers):
     posts += "  投    投局 面打  被   被   四  三  失  自  滾  飛   Ｅ\n"
     posts += "  手    球數 對席 安打 全壘  壞  振  分  責  地  球   RA\n"
     for pitcher in pitchers:
-        posts += "  %-4s   %3s  %2d   %2d   %2d   %2d  %2d  %2d  %2d  %2d  %2d  %.2f\n" %(pitcher.number, pitcher.IP, pitcher.TBF, pitcher.H, pitcher.HR, pitcher.BB, pitcher.K, pitcher.Run, pitcher.ER, pitcher.GO, pitcher.FO, pitcher.getERA())
+        posts += "  %-4s   %3s  %2d   %2d   %2d   %2d  %2d  %2d  %2d  %2d  %2d  %.2f\n" %(pitcher.name, pitcher.IP, pitcher.TBF, pitcher.H, pitcher.HR, pitcher.BB, pitcher.K, pitcher.Run, pitcher.ER, pitcher.GO, pitcher.FO, pitcher.getERA())
     
     return posts
 
@@ -344,6 +344,8 @@ def res2word(pa, wordLen):
             word = "內飛"
         elif( res == "FO" ):
             word = "界飛"
+        elif( res == "DO" ):
+            word = "出局"
         else:
             print "Error! Unknown res notation %s" %res
             sys.exit(0)  
@@ -412,8 +414,8 @@ def dump_player_statistic(team):
     posts += "Batting:\n"
     posts += "          PA  AB  1B  2B  3B  HR  DP RBI RUN  BB   K  SF\n"
     for p in team.batters:
-        space = " " * (6 - big5len(p.number) )
-        line = "%2s. %s%s" %(p.order, p.number, space)
+        space = " " * (6 - big5len(p.name) )
+        line = "%2s. %s%s" %(p.order, p.name, space)
         line += "%2d  %2d  %2d  %2d  %2d  %2d  %2d %3d %3d  %2d   %d  %2d\n" %(p.PA, p.AB, p.B1, p.B2, p.B3, p.HR, p.DP, p.RBI, p.RUN, p.BB, p.K, p.SF)
         posts += line
 
@@ -421,7 +423,7 @@ def dump_player_statistic(team):
     posts += " No.    IP  PA   H  HR  BB   K  Run  ER  GO  FO\n" 
     # Pitcher Statistic
     for p in team.pitchers:
-        posts += " %-8s%3s  %2d  %2d  %2d  %2d  %2d  %3d  %2d  %2d  %2d\n" %(p.number, p.IP, p.TBF, p.H, p.HR, p.BB, p.K, p.Run, p.ER, p.GO, p.FO)
+        posts += " %-8s%3s  %2d  %2d  %2d  %2d  %2d  %3d  %2d  %2d  %2d\n" %(p.name, p.IP, p.TBF, p.H, p.HR, p.BB, p.K, p.Run, p.ER, p.GO, p.FO)
 
     return posts
 
@@ -430,7 +432,7 @@ def PrintPlayer(player, n=-1):
     if n == -1:
         for p in player:
             print "Ord No. Inn Col Pos Res RBI Run out end note"
-            print "%3s %2s." %(p.order, p.number)
+            print "%3s %2s." %(p.order, p.name)
             for pa in p.PAs:
                 if not pa.isPlay:
                     print '\t-'
@@ -439,7 +441,7 @@ def PrintPlayer(player, n=-1):
     else:
         p = player[n]
         print "Order No. Inn Col Pos Res RBI Run out end note"
-        print " %s   %s." %(p.order, p.number)
+        print " %s   %s." %(p.order, p.name)
         for pa in p.PAs:
             if not pa.isPlay:
                 print "\t-"

@@ -76,7 +76,7 @@
 
 	<!-- batting table -->
 	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
+		<div class="col-md-8 col-md-offset-2">
 			<table class="table table-hover table-bordered table-condensed">
 				<thead>
 					<tr>
@@ -97,7 +97,7 @@
 				<tbody>
 					{% for player in batting_list %}
 					<tr>
-						<td class="form-name-show"><a href="/member/{{player.member.id}}">{{player.member}}</a></td>
+						<td class="form-name-show"><a href="/member/{{player.member.id}}">{{player.member.name}}</a></td>
 						<td class="form-td">{{player.pa}}</td>
 						<td class="form-td">{{player.ab}}</td>
 						<td class="form-td">{{player.single}}</td>
@@ -121,29 +121,29 @@
 
 	<!-- pitching table -->
 	<div class="row">
-		<div class="col-md-6 team-record col-md-offset-3">
+		<div class="col-md-8 team-record col-md-offset-2">
 			<table class="table table-hover table-bordered">
 				<thead>
 					<tr>
-						<td class="form-name-show">投手</td>
-						<td class="form-td">局數</td>
-						<td class="form-td">面對打席</td>
-						<td class="form-td">被安打</td>
-						<td class="form-td">被全壘打</td>
-						<td class="form-td">四壞</td>
-						<td class="form-td">三振</td>
-						<td class="form-td">失分</td>
-						<td class="form-td">責失</td>
-						<td class="form-td">滾地出局</td>
-						<td class="form-td">飛球出局</td>
-						<td class="form-td">勝敗</td>
+						<th class="form-name-show">投手</td>
+						<th class="form-td">局數</td>
+						<th class="form-td">面對打席</td>
+						<th class="form-td">被安打</td>
+						<th class="form-td">被全壘打</td>
+						<th class="form-td">四壞</td>
+						<th class="form-td">三振</td>
+						<th class="form-td">失分</td>
+						<th class="form-td">責失</td>
+						<th class="form-td">滾地出局</td>
+						<th class="form-td">飛球出局</td>
+						<th class="form-td">勝敗</td>
 					</tr>
 				</thead>
 
 				<tbody>
 					{% for player in pitching_list %}
 					<tr>
-						<td class="form-name-show"><a href="/member/{{player.member.id}}">{{player.member}}</a></td>
+						<td class="form-name-show"><a href="/member/{{player.member.id}}">{{player.member.name}}</a></td>
 						<td class="form-td">{{player.IP}}</td>
 						<td class="form-td">{{player.pa}}</td>
 						<td class="form-td">{{player.hit}}</td>

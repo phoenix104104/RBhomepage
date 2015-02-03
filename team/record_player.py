@@ -3,9 +3,9 @@
 import sys, os
 
 def check_pa_notation(pa):
-
+    
     err = ""
-    if( pa.result not in ["BB", "SF", "1B", "2B", "3B", "HR", "DP", "K", "CB", "IB", "IF", "FO", "F", "G", "FC", "E"] ):
+    if( pa.result not in ["BB", "SF", "1B", "2B", "3B", "HR", "DP", "K", "CB", "IB", "IF", "FO", "F", "G", "FC", "E", "NP", "DO"] ):
         err = "Unknown notation %s (%s)" %(pa.result, pa.raw_str)
 
     return err
@@ -87,9 +87,9 @@ class Team:
         self.R = sum(self.scores) 
         return self.R
 
-    def find_batter(self, number):
+    def find_batter(self, name):
         for batter in self.batters:
-            if batter.number == number:
+            if batter.name == name:
                 return batter
         # not found
         return None
@@ -121,9 +121,9 @@ class PA:
         self.change_pitcher = None
 
 class rdBatter:
-    def __init__(self, order="", number="", pos=""):
+    def __init__(self, order="", name="", pos=""):
         self.order  = order
-        self.number = number
+        self.name   = name
         self.pos    = pos
         self.PAs    = []
         self.PA     = 0
@@ -197,8 +197,8 @@ class rdBatter:
         return self.PA
 
 class rdPitcher:
-    def __init__(self, number=""):
-        self.number = number
+    def __init__(self, name=""):
+        self.name = name
         self.TBF = 0    # total batters faced 面對人次
         self.Out = 0
         self.H   = 0

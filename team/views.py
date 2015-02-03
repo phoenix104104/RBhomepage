@@ -5,8 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from models import League, Member, Game, Batting, Pitching
+import mimetypes, os
+from django.core.servers.basehttp import FileWrapper
 from parse_record import parse_game_record
-from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray, gather_team_info_from_web, text_to_table
+from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray, IntegerArray_to_CommaSeparatedString, gather_team_info_from_web, text_to_table, table_to_text
 
 
 def index(request, warning=None):
@@ -159,6 +161,9 @@ def logout_view(request):
 @login_required(login_url='/admin')
 def add_game(request):
 
+	league_list = League.objects.all()
+	member_list = Member.objects.all()
+
 	if request.method != "POST":
 		league_id 	= -1
 		date        = None
@@ -171,11 +176,9 @@ def add_game(request):
 		record_text = ""
 		message 	= ""
 		warning 	= ""
-		preview 	= False
 
-		league_list = League.objects.all()
 
-		context = {'league_list':league_list, 'league_id': league_id, 'date': date, 'location': location, 'away_name': away_name, 'away_scores': away_scores, 'home_name': home_name, 'home_scores': home_scores, 'record_text': record_text, 'preview': preview, 'warning': warning, 'message': message}
+		context = {'league_list':league_list, 'league_id': league_id, 'date': date, 'location': location, 'away_name': away_name, 'away_scores': away_scores, 'home_name': home_name, 'home_scores': home_scores, 'record_text': record_text, 'warning': warning, 'message': message}
 
 		return render(request, 'team/add_game.html', context)
 
@@ -191,10 +194,11 @@ def add_game(request):
 		away_name, away_scores = gather_team_info_from_web(request, 'away')
 		home_name, home_scores = gather_team_info_from_web(request, 'home')
 			
-		message 	= ""
-		warning 	= ""
-		preview 	= False
-
+		message = ""
+		warning = ""
+		rd_game = None
+		team 	= None
+		
 		if 'add-new-league-btn' in request.POST:
 			print "add new league!"
 			league_name = request.POST["new-league-name"]
@@ -209,9 +213,9 @@ def add_game(request):
 					league.save()
 					message = 'Add new league: %s' %league_name
 		
-		elif 'preview-btn' in request.POST:
+		if ('preview-btn' in request.POST) or ('save-game-btn' in request.POST):
 
-			league 		 = League.objects.get(pk=league_id)
+			league 		 = League.objects.get(id=league_id)
 			record_table = text_to_table(record_text.encode('utf8'))
 
 			
@@ -225,154 +229,98 @@ def add_game(request):
 			rd_game, warning = parse_game_record(away_name, away_scores, away_table, \
 	                        	                 home_name, home_scores, home_table)
 
+
 			if( warning == "" ):
 				message = "Preview record table!"
-				preview = True
 
 				if( away_name.upper() == 'RB' ):
-					batting_table  = rd_game.away.batter_table
-					pitching_table = rd_game.away.pitcher_table
+					team = rd_game.away
 				else:
-					batting_table  = rd_game.home.batter_table
-					pitching_table = rd_game.home.pitcher_table
+					team = rd_game.home
+
+				for P in team.batters:
+					P.name = (P.name).decode('utf8')
 
 
-		league_list = League.objects.all()
+				# download PTT format
+				"""
+				if 'download-btn' in request.POST:
 
-		context = {'league_list':league_list, 'league_id': league_id, 'date': date, 'location': location, 'away_name': away_name, 'away_scores': away_scores, 'home_name': home_name, 'home_scores': home_scores, 'record_text': record_text, 'preview': preview, 'warning': warning, 'message': message, 'record_game': rd_game, 'batting_table': batting_table, 'pitching_table': pitching_table}
+					filename = '%s-%s-%s.txt' %(str(date), away_name, home_name)
+					filepath = 'team/static/txt/%s' %filename
 
+					with open(filepath, 'w') as f:
+						f.write(rd_game.post_ptt)
+						print "save %s" %filepath
+
+					response = HttpResponse(FileWrapper( file(filepath) ), content_type=mimetypes.guess_type(filepath)[0] )
+					response['Content-Disposition'] = 'attachment; filename=%s' %filename
+					response['Content-Length'] = os.path.getsize(filepath)
+					
+					return response
+				"""
+
+				if 'save-game-btn' in request.POST:
+					
+					# create and save new Game object
+					game = Game(league=league)
+					game.date 			= date
+					game.location		= location
+					game.away			= away_name
+					game.away_scores	= IntegerArray_to_CommaSeparatedString(away_scores)
+					game.away_R			= rd_game.away.R
+					game.away_H			= rd_game.away.H
+					game.away_E			= rd_game.away.E
+					game.home			= home_name
+					game.home_scores	= IntegerArray_to_CommaSeparatedString(home_scores)
+					game.home_R			= rd_game.home.R
+					game.home_H			= rd_game.home.H
+					game.home_E			= rd_game.home.E
+					game.record 		= record_text
+					game.batter_table 	= table_to_text(team.batter_table)
+					game.pitcher_table 	= table_to_text(team.pitcher_table)
+
+					game.save()
+
+					# create and save new Batting object
+					nBatter = len(team.batters)
+					for i in range(1, nBatter):
+						member_id = int(request.POST.get("batter_id_" + str(i), ""))
+						member = Member.objects.get(id = member_id)
+
+						if member.exists():
+							pa		= int(request.POST.get("pa_" 	 + str(i), ""))
+							single	= int(request.POST.get("single_" + str(i), ""))
+							double	= int(request.POST.get("double_" + str(i), ""))
+							triple	= int(request.POST.get("triple_" + str(i), ""))		
+							hr		= int(request.POST.get("hr_" 	 + str(i), ""))
+							bb		= int(request.POST.get("bb_" 	 + str(i), ""))
+							rbi		= int(request.POST.get("rbi_" 	 + str(i), ""))
+							run		= int(request.POST.get("run_" 	 + str(i), ""))
+							k		= int(request.POST.get("k_" 	 + str(i), ""))
+							sf		= int(request.POST.get("sf_" 	 + str(i), ""))
+							field	= request.POST.get("sf_" + str(i), "")
+							
+							batting = Batting()
+							batting.game 	= game
+							batting.member	= member
+							batting.order 	= i
+							batting.pa     	= pa
+							batting.single	= single 
+							batting.double	= double 
+							batting.triple	= triple 
+							batting.hr    	= hr     
+							batting.rbi   	= rbi    
+							batting.run   	= run    
+							batting.bb    	= bb     
+							batting.k     	= k      
+							batting.sf    	= sf     
+							batting.field 	= field  
+							 
+							batting.save()
+					
+
+		context = {'league_list':league_list, 'league_id': league_id, 'date': date, 'location': location, 'away_name': away_name, 'away_scores': away_scores, 'home_name': home_name, 'home_scores': home_scores, 'record_text': record_text, 'warning': warning, 'message': message, 'record_game': rd_game, 'team': team, 'member_list': member_list}
+			
 		return render(request, 'team/add_game.html', context)
-	"""
-	else :
-
-		teams = Team.objects.all()
-
-		home_teamID = request.POST.get("hometeamID", "")
-		away_teamID = request.POST.get("awayteamID", "")
-		
-		hometeam = Team.objects.get(pk=home_teamID)
-		awayteam = Team.objects.get(pk=away_teamID)
-
-		homeplayer = Member.objects.filter(team = home_teamID).order_by("number")
-		awayplayer = Member.objects.filter(team = away_teamID).order_by("number")
-
-		date = request.POST.get("date", "")
-		location = request.POST.get("location", "")		
-		game_id  = request.POST.get("game_id", "")
-
-
-
-#############################################################################
-		away_record = request.POST.get("away_rd", "")
-		home_record = request.POST.get("home_rd", "")
-
-		record = None
-		record_err = ""
-		# ===== record parser
-		if( len(away_record) and len(home_record) ):
-			awayteam_name = awayteam.name.encode('utf8')[0:6]
-			hometeam_name = hometeam.name.encode('utf8')[0:6]
-			away_table = text_to_table(away_record.encode('utf8'))
-			home_table = text_to_table(home_record.encode('utf8'))
-			record, record_err = parse_game_record(awayteam_name, None, away_table, hometeam_name, None, home_table)
-			
-			record.game_type    = "台大慢壘聯盟"
-			record.date         = date
-			record.location     = location
-			record.game_id      = game_id
-			record.away.raw_record = away_record.encode('utf8')
-			record.home.raw_record = home_record.encode('utf8')
-		else:
-			if( len(away_record) == 0 ):
-				record_err = "Away 沒有記錄"
-			else:
-				record_err = "Home 沒有記錄"
-
-#############################################################################
-		
-
-
-		if( date == u'' ):
-			err_message = "請輸入日期"
-			context = {'teams': teams, 'awayteam': awayteam, 'hometeam': hometeam, 'date': date, 'location': location, 'game_id': game_id, 'away_record': away_record, 'home_record': home_record, 'warning': err_message}
-			
-			return render(request, 'sbleague/newgame.html', context)
-		
-
-		if( game_id == u'' ):
-			err_message = "請輸入場次編號"
-			context = {'teams': teams, 'awayteam': awayteam, 'hometeam': hometeam, 'date': date, 'location': location, 'game_id': game_id, 'away_record': away_record, 'home_record': home_record, 'warning': err_message}
-
-			return render(request, 'sbleague/newgame.html', context)
-
-
-		game_exist = True
-		try:
-			new = Game.objects.get(gameID=game_id)
-
-		except Game.DoesNotExist: # --- add new game
-
-			game_exist = False
-
-			max_batter_nums  = 25
-			max_pitcher_nums = 5
-
-			if( record != None and record_err == ""): 
-				# --- append batter_num to 25 and pitcher_num to 5
-				if( record.away.nBatters < max_batter_nums ):
-					for i in range(max_batter_nums-record.away.nBatters):
-						record.away.batters.append(rdBatter())
-
-				if( record.home.nBatters < max_batter_nums ):
-					for i in range(max_batter_nums-record.home.nBatters):
-						record.home.batters.append(rdBatter())
-
-				if( record.away.nPitchers < max_pitcher_nums ):
-					for i in range(max_pitcher_nums-record.away.nPitchers):
-						record.away.pitchers.append(rdPitcher())
-
-				if( record.home.nPitchers < max_pitcher_nums ):
-					for i in range(max_pitcher_nums-record.home.nPitchers):
-						record.home.pitchers.append(rdPitcher())
-
-		if( game_exist ):
-			err_message = "重複的場次編號"
-			context = {'teams': teams, 'awayteam': awayteam, 'hometeam': hometeam, 'date': date, 'location': location, 'game_id': game_id, 'away_record': away_record, 'home_record': home_record, 'warning': err_message}
-			
-			return render(request, 'sbleague/newgame.html', context)
-
-
-		# === record error
-		if( record_err != "" ):	
-			err_message = record_err
-			context = {'teams': teams, 'awayteam': awayteam, 'hometeam': hometeam, 'date': date, 'location': location, 'game_id': game_id, 'away_record': away_record, 'home_record': home_record, 'warning': err_message}
-			
-			return render(request, 'sbleague/newgame.html', context)
-
-		# === success add new game
-		if 'send' in request.POST: # --- send data
-			context = {'hometeam': hometeam, 'awayteam': awayteam, 'homeplayer': homeplayer ,'awayplayer': awayplayer, 'date': date, 'location': location , 'game_id': game_id, 'home_away': range(2), 'max_batter_nums': max_batter_nums, 'max_pitcher_nums': max_pitcher_nums, 'record': record}
-
-			return render(request, 'sbleague/newgame_detail.html', context)
-
-		elif 'download' in request.POST:
-
-			filename = '%d.txt' %int(game_id)
-			filepath = 'sbleague/static/txt/%s' %filename
-			with open(filepath, 'w') as f:
-				f.write(record.post_ptt)
-				print "save %s" %filepath
-
-			response = HttpResponse(FileWrapper( file(filepath) ), content_type=mimetypes.guess_type(filepath)[0] )
-			response['Content-Disposition'] = 'attachment; filename=%s' %filename
-			response['Content-Length'] = os.path.getsize(filepath)
-			
-			return response
-
-		else: # --- preview
-			err_message = "preview"
-			context = {'teams': teams, 'awayteam': awayteam, 'hometeam': hometeam, 'date': date, 'location': location, 'game_id': game_id, 'away_record': away_record, 'home_record': home_record, 'warning': err_message, 'record': record, 'preview': True}
-			
-			return render(request, 'sbleague/newgame.html', context)
-
-	"""
+	
