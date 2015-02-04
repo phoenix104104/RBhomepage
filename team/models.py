@@ -23,29 +23,27 @@ class League(models.Model):
 class Game(models.Model):
 	id				= models.AutoField(primary_key=True)
 	league      	= models.ForeignKey(League)
-	date        	= models.DateField(blank=True)
+	date        	= models.DateField()
 	location    	= models.CharField(max_length=200, default="")
-	away        	= models.CharField(max_length=200, default="")
+	away_name      	= models.CharField(max_length=200, default="")
 	away_scores 	= models.CharField(max_length=200, default="")
 	away_R      	= models.IntegerField(default=0)
 	away_H      	= models.IntegerField(default=0)
 	away_E      	= models.IntegerField(default=0)
-	home        	= models.CharField(max_length=200, default="")
+	home_name      	= models.CharField(max_length=200, default="")
 	home_scores 	= models.CharField(max_length=200, default="")
 	home_R      	= models.IntegerField(default=0)
 	home_H      	= models.IntegerField(default=0)
 	home_E      	= models.IntegerField(default=0)
 	record 			= models.TextField(default="")
-	batter_table 	= models.TextField(default="")
-	pitcher_table 	= models.TextField(default="")
 
 	def __unicode__(self):
-		return self.away + ' vs ' + self.home + '  ' + str(self.date)
+		return self.away_name + ' vs ' + self.home_name + '  ' + str(self.date)
 
 class Batting(models.Model):
 	game    = models.ForeignKey(Game)
 	member  = models.ForeignKey(Member)
-	order   = models.IntegerField(default=0)
+	order   = models.CharField(max_length=10, default="")
 	pa      = models.IntegerField(default=0)
 	single  = models.IntegerField(default=0)
 	double  = models.IntegerField(default=0)
@@ -60,7 +58,7 @@ class Batting(models.Model):
 
 
 	def __unicode__(self):
-		return self.member.name + ' ' + str(self.game.date) + ' ' + self.game.home + ' vs ' + self.game.away
+		return self.member.name + ' ' + str(self.game.date) + ' ' + self.game.home_name + ' vs ' + self.game.away_name
 
 
 class Pitching(models.Model):
@@ -81,4 +79,4 @@ class Pitching(models.Model):
 	lose    = models.IntegerField(default=0)
 	
 	def __unicode__(self):
-		return self.member.name + ' ' + str(self.game.date) + ' ' + self.game.home + 'vs' + self.game.away
+		return self.member.name + ' ' + str(self.game.date) + ' ' + self.game.home_name + 'vs' + self.game.away_name

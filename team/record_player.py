@@ -205,7 +205,7 @@ class rdPitcher:
         self.HR     = 0
         self.BB     = 0
         self.K      = 0
-        self.Run    = 0
+        self.RUN    = 0
         self.ER     = 0
         self.ERA    = 0
         self.GO     = 0
@@ -263,7 +263,7 @@ class rdPitcher:
             
             #print "pitcher add PA(%s), OUT = %d" %(pa.raw_str, pa.out)
             self.OUT += pa.out
-            self.Run += pa.run
+            self.RUN += pa.run
             if (isER and pa.result != "E"):
                 self.ER += pa.run
         

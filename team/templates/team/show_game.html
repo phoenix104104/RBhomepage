@@ -1,7 +1,7 @@
 {% extends "basic.html" %}
 
 {% block title %}
-	{{game.away}} vs {{game.home}}
+	{{game.away_name}} vs {{game.home_name}}
 {% endblock title %}
 
 {% block content %}
@@ -51,7 +51,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<th>{{game.away}}</th>
+						<th>{{game.away_name}}</th>
 						{% for score in game.away_scores %}
 							<th>{{score}}</th>
 						{% endfor %}
@@ -60,7 +60,7 @@
 						<th>{{game.away_E}}</th>
 					</tr>
 					<tr>
-						<th>{{game.home}}</th>
+						<th>{{game.home_name}}</th>
 						{% for score in game.home_scores %}
 							<th>{{score}}</th>
 						{% endfor %}
@@ -75,7 +75,7 @@
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<table class="table table-condensed table-bordered table-hover">
-				{% for row in game.batter_table %}
+				{% for row in team.batter_table %}
 				<tr>
 					{% for col in row %}
 						<td>{{col}}</td>

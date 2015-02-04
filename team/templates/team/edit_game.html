@@ -4,7 +4,7 @@
 
 <div class="container">
 
-	<form action="{%url 'add_game'%}" method = "post">
+	<form action="{%url 'edit_game' game.id%}" method = "post">
 		{% csrf_token %}
 	    <div class="row">
 	    	<div class="row-center">    		
@@ -28,7 +28,7 @@
     						<div class="col-sm-6">
 								<select name="league_id" class="form-control">
 									{% for league in league_list %}
-										{% if league.id == league_id %}
+										{% if league.id == game.league.id %}
 											<option value="{{league.id}}" selected>{{league.name}}</option>	
 										{% else %}
 											<option value="{{league.id}}">{{league.name}}</option>	
@@ -42,7 +42,7 @@
     					<div class="form-group">
     						<label class="col-sm-3 control-label">日期</label>
     						<div class="col-sm-6">
-                                <input type="date" class="form-control" name="date" value="{{date}}">
+                                <input type="date" class="form-control" name="date" value="{{game.date}}">
                             </div>
                             <div class="col-sm-3"></div>
 
@@ -50,7 +50,7 @@
     					<div class="form-group">
     						<label class="col-sm-3 control-label">地點</label>
     						<div class="col-sm-6">
-                                <input type="text" class="form-control" name="location" size="2" class="form-control" value="{{location}}">
+                                <input type="text" class="form-control" name="location" size="2" class="form-control" value="{{game.location}}">
                             </div>
                             <div class="col-sm-3"></div>
     					</div>
@@ -105,24 +105,24 @@
     					<tr>
     						<th><div class="table-first-col">Away</div></th>
     						<th>
-    							<input type="text" class="form-control" size="6" name="away_name" value="{{away_name}}">
+    							<input type="text" class="form-control" size="6" name="away_name" value="{{game.away_name}}">
     						</th>
-                            {% for score in away_scores %}
+                            {% for score in game.away_scores %}
     				    		<th><input type="text" class="form-control" size="1" name="away_score_{{forloop.counter}}" value="{{score}}"</th>
                             {% endfor %}
     		    		</tr>
     		    		<tr>
     		    			<th><div class="table-first-col">Home</div></th>
-    						<th><input type="text" class="form-control" size="6" name="home_name" value="{{home_name}}"></th>
+    						<th><input type="text" class="form-control" size="6" name="home_name" value="{{game.home_name}}"></th>
                             
-    			    		{% for score in home_scores %}
+    			    		{% for score in game.home_scores %}
     				    		<th><input type="text" class="form-control" size="1" name="home_score_{{forloop.counter}}" value="{{score}}"</th>
                             {% endfor %}
     		    		</tr>
     			    </tbody>
         		</table>
     
-                <textarea class="record-table lined" name="record_text" rows="11">{{record_text}}</textarea>
+                <textarea class="record-table lined" name="record_text" rows="11">{{game.record}}</textarea>
             </div>
         </div>
 
@@ -221,32 +221,30 @@ Example:
 								<th>E</th>
 							</tr>
 						</thead>
-						{% if record_game %}
 						<tbody>
 							<tr>
 								<th>
-									{{record_game.away.name}}
+									{{game.away_name}}
 								</th>
-								{% for score in record_game.away.scores %}
+								{% for score in game.away_scores %}
 									<th>{{score}}</th>
 								{% endfor %}
-								<th>{{record_game.away.R}}</th>
-								<th>{{record_game.away.H}}</th>
-								<th>{{record_game.away.E}}</th>
+								<th>{{game.away_R}}</th>
+								<th>{{game.away_H}}</th>
+								<th>{{game.away_E}}</th>
 							</tr>
 							<tr>
 								<th>
-									{{record_game.home.name}}
+									{{game.home_name}}
 								</th>
-								{% for score in record_game.home.scores %}
+								{% for score in game.home_scores %}
 									<th>{{score}}</th>
 								{% endfor %}
-								<th>{{record_game.home.R}}</th>
-								<th>{{record_game.home.H}}</th>
-								<th>{{record_game.home.E}}</th>
+								<th>{{game.home_R}}</th>
+								<th>{{game.home_H}}</th>
+								<th>{{game.home_E}}</th>
 							</tr>
 						</tbody>
-						{% endif %}
 					</table>
 				</div>
 			</div>
@@ -302,13 +300,13 @@ Example:
 							</tr>
 						</thead>
 						<tbody>
-							{% for batter in team.batters %}
+							{% for batting in batting_list %}
 							<tr>
 								<td class="form-name">
-									<select class="form-control" name="batter_{{forloop.counter}}_id">
+									<select class="form-control" name="batting_{{forloop.counter}}_id">
 									<option value = 0> -- </option>
 										{% for member in member_list %}
-											{% if member.name == batter.name %}
+											{% if member.name == batting.member.name %}
 												<option value="{{member.id}}" selected>({{member.number}}){{member.name}}</option>
 											{% else %}
 												<option value="{{member.id}}">({{member.number}}){{member.name}}</option>
@@ -316,17 +314,18 @@ Example:
 										{% endfor %}
 									</select>
 								</td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_field" value="{{batter.pos}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_pa" value="{{batter.PA}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_single" value="{{batter.B1}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_double" value="{{batter.B2}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_triple" value="{{batter.B3}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_hr" value="{{batter.HR}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_rbi" value="{{batter.RBI}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_run" value="{{batter.RUN}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_bb" value="{{batter.BB}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_k" value="{{batter.K}}"></td>
-								<td><input class="form-control" size="1" type="text" name="batter_{{forloop.counter}}_sf" value="{{batter.SF}}"></td>
+								
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_field" value="{{batting.field}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_pa" value="{{batting.pa}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_single" value="{{batting.single}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_double" value="{{batting.double}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_triple" value="{{batting.triple}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_hr" value="{{batting.hr}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_rbi" value="{{batting.rbi}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_run" value="{{batting.run}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_bb" value="{{batting.bb}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_k" value="{{batting.k}}"></td>
+								<td><input class="form-control" size="1" type="text" name="batting_{{forloop.counter}}_sf" value="{{batting.sf}}"></td>
 							</tr>
 							{% endfor %}
 						</tbody>
@@ -356,13 +355,13 @@ Example:
 						</thead>
 
 						<tbody>
-							{% for pitcher in team.pitchers %}
+							{% for pitching in pitching_list %}
 							<tr>
 								<td class="form-name">
-									<select class="form-control" name="pitcher_{{forloop.counter}}_id">
+									<select class="form-control" name="pitching_{{forloop.counter}}_id">
 									<option value = 0> -- </option>
 										{% for member in member_list %}
-											{% if member.name == pitcher.name %}
+											{% if member.name == pitching.member.name %}
 												<option value="{{member.id}}" selected>({{member.number}}){{member.name}}</option>
 											{% else %}
 												<option value="{{member.id}}">({{member.number}}){{member.name}}</option>
@@ -370,18 +369,18 @@ Example:
 										{% endfor %}
 									</select>
 								</td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_outs" value="{{pitcher.OUT}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_pa" value="{{pitcher.TBF}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_hit" value="{{pitcher.H}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_hr" value="{{pitcher.HR}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_bb" value="{{pitcher.BB}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_k" value="{{pitcher.K}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_run" value="{{pitcher.Run}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_er" value="{{pitcher.ER}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_go" value="{{pitcher.GO}}"></td>
-								<td><input class="form-control" size="1" type="text" name="pitcher_{{forloop.counter}}_fo" value="{{pitcher.FO}}"></td>
-								<td><input class="form-control checkbox_wl" type="checkbox" name="pitcher_{{forloop.counter}}_win" value="{{pitcher.WIN}}" onClick="check_wl(this);"></td>
-								<td><input class="form-control checkbox_wl" type="checkbox" name="pitcher_{{forloop.counter}}_lose" value="{{pitcher.LOSE}}" onClick="check_wl(this);"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_outs" value="{{pitching.outs}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_pa" value="{{pitching.pa}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_hit" value="{{pitching.hit}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_hr" value="{{pitching.hr}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_bb" value="{{pitching.bb}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_k" value="{{pitching.k}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_run" value="{{pitching.run}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_er" value="{{pitching.er}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_go" value="{{pitching.go}}"></td>
+								<td><input class="form-control" size="1" type="text" name="pitching_{{forloop.counter}}_fo" value="{{pitching.fo}}"></td>
+								<td><input class="form-control checkbox_wl" type="checkbox" name="pitching_{{forloop.counter}}_win" value="{{pitching.win}}" onClick="check_wl(this);"></td>
+								<td><input class="form-control checkbox_wl" type="checkbox" name="pitching_{{forloop.counter}}_lose" value="{{pitching.lose}}" onClick="check_wl(this);"></td>
 							</tr>
 							{% endfor %}
 						</tbody>

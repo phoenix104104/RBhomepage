@@ -45,9 +45,8 @@ def text_to_table(text):
     
     return table
 
-def gather_team_info_from_web(request, HA):
+def gather_team_scores_from_web(request, HA):
 
-    team_name  = request.POST[HA + "_name"].encode('utf8')
     scores = []
     for i in range(1, 8):
         score = request.POST[HA + "_score_" + str(i)]
@@ -55,7 +54,7 @@ def gather_team_info_from_web(request, HA):
             break
         scores.append(int(score))
 
-    return (team_name, scores)
+    return scores
 
 # collect all statistic for webpage
 class statBatting():
@@ -185,6 +184,8 @@ class statPitching():
 			self.wl = "勝"
 		elif( self.lose == 1 ):
 			self.wl = "敗"
+		else:
+			self.wl = "-"
 
 
 	def copy(self, pitching):

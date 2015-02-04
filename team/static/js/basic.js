@@ -82,7 +82,5 @@ function check_wl(current_box){
             boxs[i].checked = current_box.checked;
             boxs[i].value = current_box.value;
         }
-        console.log(boxs[i].value)
     }
-    console.log("////////////")
 }

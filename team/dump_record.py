@@ -146,7 +146,7 @@ def make_pitcher_table(team):
         row.append(pitcher.HR)
         row.append(pitcher.BB)
         row.append(pitcher.K)
-        row.append(pitcher.Run)
+        row.append(pitcher.RUN)
         row.append(pitcher.ER)
         row.append(pitcher.GO)
         row.append(pitcher.FO)
@@ -216,7 +216,7 @@ def make_pitcher_PTTtable(pitchers):
     posts += "  投    投局 面打  被   被   四  三  失  自  滾  飛   Ｅ\n"
     posts += "  手    球數 對席 安打 全壘  壞  振  分  責  地  球   RA\n"
     for pitcher in pitchers:
-        posts += "  %-4s   %3s  %2d   %2d   %2d   %2d  %2d  %2d  %2d  %2d  %2d  %.2f\n" %(pitcher.name, pitcher.IP, pitcher.TBF, pitcher.H, pitcher.HR, pitcher.BB, pitcher.K, pitcher.Run, pitcher.ER, pitcher.GO, pitcher.FO, pitcher.getERA())
+        posts += "  %-4s   %3s  %2d   %2d   %2d   %2d  %2d  %2d  %2d  %2d  %2d  %.2f\n" %(pitcher.name, pitcher.IP, pitcher.TBF, pitcher.H, pitcher.HR, pitcher.BB, pitcher.K, pitcher.RUN, pitcher.ER, pitcher.GO, pitcher.FO, pitcher.getERA())
     
     return posts
 
@@ -424,7 +424,7 @@ def dump_player_statistic(team):
     posts += " No.    IP  PA   H  HR  BB   K  Run  ER  GO  FO\n" 
     # Pitcher Statistic
     for p in team.pitchers:
-        posts += " %-8s%3s  %2d  %2d  %2d  %2d  %2d  %3d  %2d  %2d  %2d\n" %(p.name, p.IP, p.TBF, p.H, p.HR, p.BB, p.K, p.Run, p.ER, p.GO, p.FO)
+        posts += " %-8s%3s  %2d  %2d  %2d  %2d  %2d  %3d  %2d  %2d  %2d\n" %(p.name, p.IP, p.TBF, p.H, p.HR, p.BB, p.K, p.RUN, p.ER, p.GO, p.FO)
 
     return posts
 
