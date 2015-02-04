@@ -138,36 +138,36 @@
 			<table class="table table-hover table-bordered">
 				<thead>
 					<tr>
-						<th class="form-name-show">投手</td>
-						<th class="form-td">局數</td>
-						<th class="form-td">面對打席</td>
-						<th class="form-td">被安打</td>
-						<th class="form-td">被全壘打</td>
-						<th class="form-td">四壞</td>
-						<th class="form-td">三振</td>
-						<th class="form-td">失分</td>
-						<th class="form-td">責失</td>
-						<th class="form-td">滾地出局</td>
-						<th class="form-td">飛球出局</td>
-						<th class="form-td">勝敗</td>
+						<th>投手</th>
+						<th>局數</th>
+						<th>面對打席</th>
+						<th>被安打</th>
+						<th>被全壘打</th>
+						<th>四壞</th>
+						<th>三振</th>
+						<th>失分</th>
+						<th>責失</th>
+						<th>滾地出局</th>
+						<th>飛球出局</th>
+						<th>勝敗</th>
 					</tr>
 				</thead>
 
 				<tbody>
 					{% for player in pitching_list %}
 					<tr>
-						<td class="form-name-show"><a href="/member/{{player.member.id}}">{{player.member.name}}</a></td>
-						<td class="form-td">{{player.IP}}</td>
-						<td class="form-td">{{player.pa}}</td>
-						<td class="form-td">{{player.hit}}</td>
-						<td class="form-td">{{player.hr}}</td>
-						<td class="form-td">{{player.bb}}</td>
-						<td class="form-td">{{player.k}}</td>
-						<td class="form-td">{{player.run}}</td>
-						<td class="form-td">{{player.er}}</td>
-						<td class="form-td">{{player.go}}</td>
-						<td class="form-td">{{player.fo}}</td>
-						<td class="form-td">{{player.wl}}</td>
+						<td><a href="/member/{{player.member.id}}">{{player.member.name}}</a></td>
+						<td>{{player.IP}}</td>
+						<td>{{player.pa}}</td>
+						<td>{{player.hit}}</td>
+						<td>{{player.hr}}</td>
+						<td>{{player.bb}}</td>
+						<td>{{player.k}}</td>
+						<td>{{player.run}}</td>
+						<td>{{player.er}}</td>
+						<td>{{player.go}}</td>
+						<td>{{player.fo}}</td>
+						<td>{{player.wl}}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -176,7 +176,29 @@
 		
 	</div>
 	<!-- end of pitching table -->
+	
+	<br>
+	{% if user.is_authenticated %}
+	<form action="{%url 'show_game' game.id %}" method = "post">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4 button">
+				<input type="submit" class="btn btn-primary" name="edit-btn" value="修改比賽">
+				<input type="submit" class="btn btn-success" name="download-btn" value="下載PTT記錄檔">
+			</div>
+		</div>
+	</form>
+	{% endif %}
 
+
+</div>
+
+
+<div class="footer">
+    <div class="container">
+        <div class="row row-center">
+        </div>
+    </div>
 </div>
 
 {% endblock content %}

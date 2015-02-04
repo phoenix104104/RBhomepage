@@ -120,8 +120,9 @@ def make_batter_table(team):
 
         for i in range(len(player[n].PAs) ):
             pa = player[n].PAs[i]
-            word, word_len = PA2Character(pa)
-            row[pa.column+2] = "%s" %word
+            if( pa.isPlay ):
+                word, word_len = PA2Character(pa)
+                row[pa.column+2] = "%s" %word
 
         table.append(row)
 

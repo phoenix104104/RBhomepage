@@ -37,35 +37,76 @@ def show_all_game(request):
 def show_game(request, game_id) :
 
 	game = Game.objects.get(id = game_id)
-	
-	batting_all  = Batting.objects.filter(game = game).order_by("order")
-	pitching_all = Pitching.objects.filter(game = game).order_by("order")
-	
-	batting_list  = []
-	pitching_list = []
+		
+	if request.method != "POST":
+		
+		batting_all  = Batting.objects.filter(game = game).order_by("order")
+		pitching_all = Pitching.objects.filter(game = game).order_by("order")
+		
+		batting_list  = []
+		pitching_list = []
 
-	for batting in batting_all:
-		player = statBatting()
-		player.copy(batting)
-		player.stat()
+		for batting in batting_all:
+			player = statBatting()
+			player.copy(batting)
+			player.stat()
 
-		batting_list.append(player)
+			batting_list.append(player)
 
-	for pitching in pitching_all:
-		player = statPitching()
-		player.copy(pitching)
-		player.stat()
+		for pitching in pitching_all:
+			player = statPitching()
+			player.copy(pitching)
+			player.stat()
 
-		pitching_list.append(player)
+			pitching_list.append(player)
 
-	game.away_scores 	= CommaSeparatedString_to_IntegerArray(game.away_scores)
-	game.home_scores 	= CommaSeparatedString_to_IntegerArray(game.home_scores)
-	game.batter_table 	= text_to_table(game.batter_table)
-	game.pitcher_table 	= text_to_table(game.pitcher_table)
+		game.away_scores 	= CommaSeparatedString_to_IntegerArray(game.away_scores)
+		game.home_scores 	= CommaSeparatedString_to_IntegerArray(game.home_scores)
+		game.batter_table 	= text_to_table(game.batter_table)
+		game.pitcher_table 	= text_to_table(game.pitcher_table)
 
-	context = {'game': game, 'batting_list': batting_list, 'pitching_list': pitching_list}
-	return render(request, 'team/show_game.html', context)	
+		context = {'game': game, 'batting_list': batting_list, 'pitching_list': pitching_list}
+		return render(request, 'team/show_game.html', context)	
 
+	else:
+
+				
+		# download PTT format
+		
+		if 'download-btn' in request.POST:
+			print "download game %d PTT format" %game.id
+			
+			away_name  	= game.away.encode('utf8')
+			home_name  	= game.home.encode('utf8')
+			away_scores = CommaSeparatedString_to_IntegerArray(game.away_scores)
+			home_scores = CommaSeparatedString_to_IntegerArray(game.home_scores)
+
+			record_table = text_to_table(game.record.encode('utf8'))
+
+			if( away_name.upper() == 'RB' ):
+				away_table = record_table
+				home_table = []
+			else:
+				away_table = []
+				home_table = record_table
+
+			rd_game, warning = parse_game_record(away_name, away_scores, away_table, \
+	                        	                 home_name, home_scores, home_table)
+
+
+			filename = '%s-%s-%s.txt' %(str(game.date), game.away, game.home)
+			filepath = 'team/static/txt/%s' %filename
+
+			with open(filepath, 'w') as f:
+				f.write(rd_game.post_ptt)
+				print "save %s" %filepath
+
+			response = HttpResponse(FileWrapper( file(filepath) ), content_type=mimetypes.guess_type(filepath)[0] )
+			response['Content-Disposition'] = 'attachment; filename=%s' %filename
+			response['Content-Length'] = os.path.getsize(filepath)
+			
+			return response
+			
 
 
 def show_member(request, member_id) :
@@ -220,7 +261,6 @@ def add_game(request):
 			league 		 = League.objects.get(id=league_id)
 			record_table = text_to_table(record_text.encode('utf8'))
 
-			
 			if( away_name.upper() == 'RB' ):
 				away_table = record_table
 				home_table = []
@@ -251,24 +291,6 @@ def add_game(request):
 				team.pitchers.append([])
 				team.pitchers.append([])
 
-				
-				# download PTT format
-				"""
-				if 'download-btn' in request.POST:
-
-					filename = '%s-%s-%s.txt' %(str(date), away_name, home_name)
-					filepath = 'team/static/txt/%s' %filename
-
-					with open(filepath, 'w') as f:
-						f.write(rd_game.post_ptt)
-						print "save %s" %filepath
-
-					response = HttpResponse(FileWrapper( file(filepath) ), content_type=mimetypes.guess_type(filepath)[0] )
-					response['Content-Disposition'] = 'attachment; filename=%s' %filename
-					response['Content-Length'] = os.path.getsize(filepath)
-					
-					return response
-				"""
 
 				if 'save-game-btn' in request.POST:
 					
@@ -381,8 +403,9 @@ def add_game(request):
 							 
 							pitching.save()
 				
-
-				return redirect("/game/"+str(game.id))
+					return redirect("/game/"+str(game.id))
+				# end of add-game-btn
+			# end of preview
 
 					
 
