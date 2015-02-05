@@ -14,11 +14,11 @@ from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray
 def index(request, warning=None):
 	player = Member.objects.all()
 	if request.user.is_authenticated:
-		print "authenticated user"
+		print ("authenticated user")
 	if request.user.username:
-		print "username = " + request.user.username
+		print ("username = " + request.user.username)
 	else:
-		print "none"
+		print ("none")
 	context = {'player': player, 'warning': warning}
 	return render(request, 'team/index.html', context)
 
@@ -89,14 +89,14 @@ def show_game(request, game_id) :
 	else:
 		# download PTT format
 		if 'download-btn' in request.POST:
-			print "download game %d PTT format" %game.id
+			print ("download game %d PTT format" %game.id)
 			
 			filename = '%s-%s-%s.txt' %(str(game.date), game.away, game.home)
 			filepath = 'team/static/txt/%s' %filename
 
 			with open(filepath, 'w') as f:
 				f.write(rd_game.post_ptt)
-				print "save %s" %filepath
+				print ("save %s" %filepath)
 
 			response = HttpResponse(FileWrapper( file(filepath) ), content_type=mimetypes.guess_type(filepath)[0] )
 			response['Content-Disposition'] = 'attachment; filename=%s' %filename
@@ -135,10 +135,10 @@ def show_member(request, member_id) :
 			player.ops_s = batting_sum.ops_s
 			
 			# opponent team
-			if( player.game.home == 'RB' ):
-				player.opp = player.game.away
+			if( player.game.home_name == 'RB' ):
+				player.opp = player.game.away_name
 			else:
-				player.opp = player.game.home
+				player.opp = player.game.home_name
 
 			batting_list.append(player)
 
@@ -224,7 +224,7 @@ def add_game(request):
 
 		context = {'league_list':league_list, 'game': game, 'warning': warning, 'message': message}
 
-		return render(request, 'team/edit_game.html', context)
+		return render(request, 'team/add_game.html', context)
 
 	else:
 
@@ -244,7 +244,7 @@ def add_game(request):
 		team = None
 		
 		if 'add-new-league-btn' in request.POST:
-			print "add new league!"
+			print ("add new league!")
 			league_name = request.POST["new-league-name"]
 
 			if league_name != None:
@@ -290,9 +290,11 @@ def add_game(request):
 
 				if( away_name.upper() == 'RB' ):
 					team = game_record.away
+					team.pitchers[0].RUN = game_record.home.R
 				else:
 					team = game_record.home
-				
+					team.pitchers[0].RUN = game_record.away.R
+
 				# create and save new Batting object
 				nBatter = len(team.batters)
 				batting_list = []
@@ -323,7 +325,7 @@ def add_game(request):
 				for i in range(nPitcher):
 					pitching 		= Pitching()
 					pitching.game 	= game
-					pitching.order 	= team.i
+					pitching.order 	= i
 					pitching.outs   = team.pitchers[i].OUT
 					pitching.pa     = team.pitchers[i].TBF
 					pitching.hit   	= team.pitchers[i].H
@@ -404,7 +406,7 @@ def add_game(request):
 					
 		context = {'league_list':league_list, 'game': game, 'warning': warning, 'message': message, 'game_record': game_record, 'team': team, 'member_list': member_list, 'batting_list': batting_list, 'pitching_list': pitching_list}
 			
-		return render(request, 'team/edit_game.html', context)
+		return render(request, 'team/add_game.html', context)
 
 @login_required(login_url='/admin')
 def edit_game(request, game_id):
@@ -412,8 +414,8 @@ def edit_game(request, game_id):
 	game = Game.objects.get(id = game_id)
 	league_list = League.objects.all()
 	member_list = Member.objects.all()
-	batting_list  = Batting.objects.filter(game = game)
-	pitching_list = Pitching.objects.filter(game = game)
+	batting_query  = Batting.objects.filter(game = game)
+	pitching_query = Pitching.objects.filter(game = game)
 
 	if request.method != "POST":
 		game.date   = unicode(game.date)
@@ -440,6 +442,20 @@ def edit_game(request, game_id):
 			team = game_record.away
 		else:
 			team = game_record.home
+
+
+		batting_list = []
+		for batting in batting_query:
+			batting_list.append(batting)
+
+		pitching_list = []
+		for pitching in pitching_query:
+			pitching_list.append(pitching)
+
+		# add rows for changing pitchers
+		N = len(pitching_list)
+		for i in range(5 - N):
+			pitching_list.append(Pitching())
 
 		context = {'league_list':league_list, 'game': game, 'warning': warning, 'message': message, 'game_record': game_record, 'team': team, 'member_list': member_list, 'batting_list': batting_list, 'pitching_list': pitching_list}
 		
@@ -497,10 +513,9 @@ def edit_game(request, game_id):
 				
 				batting_list = []
 				for batter in team.batters:
-
 					batting = Batting()
-					for play in batting_list:
-						if batter.name == play.member.name:
+					for play in batting_query:
+						if batter.name.decode('utf8') == play.member.name:
 							batting = play
 							break
 
@@ -526,8 +541,8 @@ def edit_game(request, game_id):
 				for pitcher in team.pitchers:
 					
 					pitching = Pitching()
-					for play in pitching_list:
-						if pitcher.name == play.member.name:
+					for play in pitching_query:
+						if pitcher.name.decode('utf8') == play.member.name:
 							pitching = play
 							break
 					
@@ -544,12 +559,70 @@ def edit_game(request, game_id):
 					pitching.er    	= pitcher.ER
 					pitching.go    	= pitcher.GO
 					pitching.fo    	= pitcher.FO
-					pitching.win   	= pitcher.WIN
-					pitching.lose  	= pitcher.LOSE
 					
 					pitching_list.append(pitching)
 					i += 1
 
+				# add rows for changing pitchers
+				N = len(pitching_list)
+				for i in range(5 - N):
+					pitching_list.append(Pitching())
+
+
+
+				if 'save-game-btn' in request.POST:
+					
+					# create and save new Game object
+					game.away_scores = IntegerArray_to_CommaSeparatedString(game.away_scores)
+					game.home_scores = IntegerArray_to_CommaSeparatedString(game.home_scores)
+					game.save()
+
+					nBatter = len(batting_list)
+					for i in range(nBatter):
+						batting = batting_list[i]
+						member_id = int(request.POST.get("batting_%d_id" %(i+1), ""))
+
+						if( member_id != 0 ):
+							batting.member  = Member.objects.get(id = member_id)
+							batting.game 	= game
+							batting.save()
+
+						
+					nPitcher = len(pitching_list)
+					for i in range(nPitcher):
+						pitching = pitching_list[i]
+						member_id = int(request.POST.get("pitching_%d_id" %(i+1), ""))
+
+						if( member_id != 0 ):
+							pitching.member = Member.objects.get(id = member_id)
+							pitching.game 	= game
+							pitching.outs	= int(request.POST.get("pitching_%d_outs"	%(i+1) , ""))
+							pitching.pa		= int(request.POST.get("pitching_%d_pa"  	%(i+1) , ""))
+							pitching.hit	= int(request.POST.get("pitching_%d_hit"	%(i+1) , ""))
+							pitching.hr		= int(request.POST.get("pitching_%d_hr" 	%(i+1) , ""))
+							pitching.bb		= int(request.POST.get("pitching_%d_bb" 	%(i+1) , ""))
+							pitching.k		= int(request.POST.get("pitching_%d_k" 	 	%(i+1) , ""))
+							pitching.run	= int(request.POST.get("pitching_%d_run" 	%(i+1) , ""))
+							pitching.er		= int(request.POST.get("pitching_%d_er" 	%(i+1) , ""))
+							pitching.go		= int(request.POST.get("pitching_%d_go" 	%(i+1) , ""))
+							pitching.fo		= int(request.POST.get("pitching_%d_fo" 	%(i+1) , ""))
+							
+							win	 = request.POST.get("pitching_%d_win"  %(i+1) , "")
+							lose = request.POST.get("pitching_%d_lose" %(i+1) , "")
+							
+							if( win != '' ):
+								pitching.win = 1
+							else:
+								pitching.win = 0
+
+							if( lose != '' ):
+								pitching.lose = 1
+							else:
+								pitching.lose = 0
+							 
+							pitching.save()
+				
+					return redirect("/game/"+str(game.id))
 
 		context = {'league_list':league_list, 'game': game, 'warning': warning, 'message': message, 'game_record': game_record, 'team': team, 'member_list': member_list, 'batting_list': batting_list, 'pitching_list': pitching_list}
 			

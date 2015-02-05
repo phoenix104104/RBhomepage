@@ -7,59 +7,109 @@
 {% block content %}
 
 	<div class="container">
-		<h4>{{member.name}}</h4>
+		<h4><b>{{member.name}}</b></h4>
 		<br>
-		<table class="table table-hover table-bordered table-condensed">
-			<thead>
-				<tr>
-					<th colspan="18" class="table-title">逐場打擊成績</th>
-				</tr>
-				<tr>
-					<th>日期</th>
-					<th>對手</th>
-					<th>打席</th>
-					<th>打數</th>
-					<th>安打</th>
-					<th>一安</th>
-					<th>二安</th>
-					<th>三安</th>
-					<th>全壘打</th>
-					<th>打點</th>
-					<th>得分</th>
-					<th>保送</th>
-					<th>三振</th>
-					<th>犧牲打</th>
-					<th>打擊率</th>
-					<th>上壘率</th>
-					<th>長打率</th>
-					<th>攻擊指數</th>
-				</tr>
-			</thead>
-			<tbody>
-			{% for batting in batting_list %}
-				<tr>
-					<td><a href="/game/{{batting.game.id}}">{{batting.game.date}}</a></td>
-					<td>{{batting.opp}}</td>
-					<td>{{batting.pa}}</td>
-					<td>{{batting.ab}}</td>
-					<td>{{batting.hit}}</td>
-					<td>{{batting.single}}</td>
-					<td>{{batting.double}}</td>
-					<td>{{batting.triple}}</td>
-					<td>{{batting.hr}}</td>
-					<td>{{batting.rbi}}</td>
-					<td>{{batting.run}}</td>
-					<td>{{batting.bb}}</td>
-					<td>{{batting.k}}</td>
-					<td>{{batting.sf}}</td>
-					<td>{{batting.avg_s}}</td>
-					<td>{{batting.obp_s}}</td>
-					<td>{{batting.slg_s}}</td>
-					<td>{{batting.ops_s}}</td>
-				</tr>
-			{% endfor %}
-			</tbody>
 
+		<div class="row">
+			<form action="" method = "post">
+
+				<span class="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+				    Year
+				    <span class="caret"></span>
+				  	</button>
+				  	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    	<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+				  	</ul>
+				</span>
+
+				<span class="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+				    Month
+				    <span class="caret"></span>
+				  	</button>
+				  	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    	<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+				  	</ul>
+				</span>
+				
+				<span class="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+				    League
+				    <span class="caret"></span>
+				  	</button>
+				  	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    	<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+				  	</ul>
+				</span>
+
+				<span class="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+				    Opponent
+				    <span class="caret"></span>
+				  	</button>
+				  	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    	<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+				  	</ul>
+				</span>
+				<table class="table table-hover table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th colspan="19" class="table-title">逐場打擊成績</th>
+						</tr>
+						<tr>
+							<th>日期</th>
+							<th>聯賽</th>
+							<th>對手</th>
+							<th>打席</th>
+							<th>打數</th>
+							<th>安打</th>
+							<th>一安</th>
+							<th>二安</th>
+							<th>三安</th>
+							<th>全壘打</th>
+							<th>打點</th>
+							<th>得分</th>
+							<th>保送</th>
+							<th>三振</th>
+							<th>犧牲打</th>
+							<th>打擊率</th>
+							<th>上壘率</th>
+							<th>長打率</th>
+							<th>攻擊指數</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% for batting in batting_list %}
+						<tr>
+							<td><a href="/game/{{batting.game.id}}">{{batting.game.date}}</a></td>
+							<td>{{batting.game.league}}</td>
+							<td>{{batting.opp}}</td>
+							<td>{{batting.pa}}</td>
+							<td>{{batting.ab}}</td>
+							<td>{{batting.hit}}</td>
+							<td>{{batting.single}}</td>
+							<td>{{batting.double}}</td>
+							<td>{{batting.triple}}</td>
+							<td>{{batting.hr}}</td>
+							<td>{{batting.rbi}}</td>
+							<td>{{batting.run}}</td>
+							<td>{{batting.bb}}</td>
+							<td>{{batting.k}}</td>
+							<td>{{batting.sf}}</td>
+							<td>{{batting.avg_s}}</td>
+							<td>{{batting.obp_s}}</td>
+							<td>{{batting.slg_s}}</td>
+							<td>{{batting.ops_s}}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</form>
+		</div>
+
+		<table class="table table-hover table-bordered table-condensed">
+		
 			<thead>
 				<tr>
 					<th colspan="18" class="table-title">生涯打擊成績</th>
