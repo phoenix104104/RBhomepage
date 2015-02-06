@@ -110,12 +110,30 @@ def show_game(request, game_id) :
 			
 
 
-def show_member(request, member_id) :
+def show_member(request, member_id):
 
 	member = Member.objects.get(id = member_id)
+	game_all = Game.objects.all().order_by("date")
+	
+	selected_year  	= 0
+	selected_month 	= 0
+	selected_league	= 0
+
+	if request.method == "POST":
+		selected_year  = int(request.POST.get("selected-year"))
+		selected_month = int(request.POST.get("selected-month"))
+				
+
+	# calculate years
+	y1 = int(game_all[0].date.year)
+	y2 = int(game_all[len(game_all)-1].date.year)
+	years = [y for y in range(y1, y2+1)]
+	
+	months = range(1, 13)
+
 
 	# --- batting
-	batting_all  = Batting.objects.filter(member__id = member_id).order_by("game")
+	batting_all  = Batting.objects.filter(member__id = member_id).order_by("game__date")
 	batting_sum  = statBatting()
 	batting_list = []
 
@@ -171,7 +189,7 @@ def show_member(request, member_id) :
 			pitching_list.append(player)
 
 	
-	context = {'member': member, 'batting_list': batting_list, 'batting_sum': batting_sum, 'pitching_list': pitching_list, 'pitching_sum': pitching_sum}
+	context = {'member': member, 'years': years, 'months': months, 'selected_year': selected_year, 'selected_month': selected_month, 'batting_list': batting_list, 'batting_sum': batting_sum, 'pitching_list': pitching_list, 'pitching_sum': pitching_sum}
 
 	return render(request, 'team/show_member.html', context)
 

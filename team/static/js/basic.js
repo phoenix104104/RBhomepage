@@ -64,6 +64,20 @@ $(document).ready(function() {
         }
     }
 
+
+    // dropdown menu
+    $(".dropdown-menu li a").click(function(){
+      var selText = $(this).text();
+      $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+    });
+
+
+    // bootstrap tab
+    $('#mamber-tab a:last').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+
 });
 
 function check_wl(current_box){
@@ -83,4 +97,9 @@ function check_wl(current_box){
             boxs[i].value = current_box.value;
         }
     }
+}
+
+function submit_options(selector){
+    console.log(selector.value);
+    selector.form.submit();
 }
