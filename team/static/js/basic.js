@@ -63,22 +63,69 @@ $(document).ready(function() {
             boxs[i].value = '0';
         }
     }
-
-
-    // dropdown menu
-    $(".dropdown-menu li a").click(function(){
-      var selText = $(this).text();
-      $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+/*
+    // use local storage (cookie) to store tab
+     $('#member-tab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
     });
 
+    // store the currently selected tab in the hash value
+    $("ul.nav-tabs > li > a").on("shown.bs.tab", function (e) {
+        var id = $(e.target).attr("href").substr(1);
+        window.location.hash = id;
+    });
 
-    // bootstrap tab
-    $('#mamber-tab a:last').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    })
+    // on load of the page: switch to the currently selected tab
+    var hash = window.location.hash;
+    $('#member-tab a[href="' + hash + '"]').tab('show');
+*/
+  
+
+ //console.log($('a[data-toggle="tab"]:first').tab('show'))
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+        //save the latest tab; use cookies if you like 'em better:
+        localStorage.setItem('lastTab', $(this).attr('href'));
+        console.log("store last tab");
+    });
+
+    //go to the latest tab, if it exists:
+    var lastTab = localStorage.getItem('lastTab');
+    if ($('a[href=' + lastTab + ']').length > 0) {
+        $('a[href=' + lastTab + ']').tab('show');
+        console.log("restore last tab");
+    }
+    else
+    {
+        // Set the first tab if cookie do not exist
+        var element = document.getElementById("Game-Log");
+        element.className += " active";
+        $('a[data-toggle="tab"]:first').tab('show');
+        console.log("show first tab");
+    }
+    
 
 });
+
+
+/*
+$(function() { 
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+        //save the latest tab using a cookie:
+        $.cookie('last_tab', $(e.target).attr('href'));
+    });
+    //activate latest tab, if it exists:
+    var lastTab = $.cookie('last_tab');
+    if (lastTab) {
+        $('a[href=' + lastTab + ']').tab('show');
+    }
+    else
+    {
+        // Set the first tab if cookie do not exist
+        $('a[data-toggle="tab"]:first').tab('show');
+    }
+});*/
 
 function check_wl(current_box){
     

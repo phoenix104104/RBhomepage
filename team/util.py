@@ -74,10 +74,10 @@ class statBatting():
 	sf      = 0
 	ab   	= 0
 	hit  	= 0
-	avg  	= 0
-	slg  	= 0
-	obp  	= 0
-	ops  	= 0
+	avg  	= 0.0
+	slg  	= 0.0
+	obp  	= 0.0
+	ops  	= 0.0
 
 	avg_s	= ''
 	slg_s	= ''
@@ -153,10 +153,10 @@ class statPitching():
 	lose    = 0
 	era    	= 0
 	whip   	= 0
-	IP  	= ''
+	IP  	= '0.0'
 	wl 		= ''
-	era_s  	= ''
-	whip_s 	= ''
+	era_s  	= '0.00'
+	whip_s 	= '0.00'
 
 	def stat(self):
 		self.inning = 0.1 * (self.outs % 3) + math.floor(self.outs / 3)
@@ -203,6 +203,7 @@ class statPitching():
 		self.fo     = pitching.fo
 		self.win    = pitching.win
 		self.lose   = pitching.lose
+		self.gp     = 1
 
 	# accumulate statistic
 	def add(self, player):
