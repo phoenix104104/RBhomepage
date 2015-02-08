@@ -13,14 +13,9 @@ from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray
 
 
 def index(request, warning=None):
-	player = Member.objects.all()
-	if request.user.is_authenticated:
-		print ("authenticated user")
-	if request.user.username:
-		print ("username = " + request.user.username)
-	else:
-		print ("none")
-	context = {'player': player, 'warning': warning}
+	
+
+	context = {'warning': warning}
 	return render(request, 'team/index.html', context)
 
 
