@@ -6,9 +6,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from models import League, Member, Game, Batting, Pitching
 import mimetypes, os
+from operator import attrgetter
 from django.core.servers.basehttp import FileWrapper
 from parse_record import parse_game_record
-from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray, IntegerArray_to_CommaSeparatedString, gather_team_scores_from_web, text_to_table, table_to_text
+from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray, IntegerArray_to_CommaSeparatedString, gather_team_scores_from_web, text_to_table, table_to_text, calculate_batting_rank
 
 
 def index(request, warning=None):
@@ -272,7 +273,7 @@ def show_member(request, member_id):
 	pitching_all  = pitching_all.order_by("game__date")
 
 	career_pitching_list = []
-
+	
 	if pitching_all.exists():
 
 		# calculate data per year
@@ -298,7 +299,7 @@ def show_member(request, member_id):
 			for month in months:
 				pitching_month = pitching_all.filter(game__date__month = month)
 				pitching_sum  = statPitching()
-
+	
 				for pitching in pitching_month:
 					player = statPitching()
 					player.copy(pitching)
@@ -315,7 +316,51 @@ def show_member(request, member_id):
 	return render(request, 'team/show_member.html', context)
 
 
-    
+  
+def show_all_batting(request):
+
+	game_all = Game.objects.all().order_by("date")
+	# calculate years
+	y1 = int(game_all[0].date.year)
+	y2 = int(game_all[len(game_all)-1].date.year)
+	years = [y for y in range(y1, y2+1)]
+	
+	months = range(1, 13)
+	leagues = League.objects.all()
+	
+	
+	selected_year  	= 0
+	selected_month 	= 0
+	selected_league	= 0
+	
+	if request.method == "POST":
+		selected_year  	= int(request.POST.get("selected-year"))
+		selected_month 	= int(request.POST.get("selected-month"))
+		selected_league	= int(request.POST.get("selected-league"))
+
+
+	# --- batting
+	batting_all = Batting.objects.all()
+	if( selected_year != 0 ):
+		batting_all  = batting_all.filter(game__date__year = selected_year)
+	if( selected_month != 0 ):
+		batting_all  = batting_all.filter(game__date__month = selected_month)
+	if( selected_league != 0 ):
+		batting_all  = batting_all.filter(game__league__id = selected_league)
+
+	batting_list = calculate_batting_rank(batting_all)
+
+	batting_list = sorted(batting_list, key=attrgetter("avg"), reverse=True)
+
+	context = {'years': years, 'months': months, 'leagues': leagues, 'selected_year': selected_year, 'selected_month': selected_month, 'selected_league': selected_league, 'batting_list': batting_list}
+
+	return render(request, 'team/show_all_batting.html', context)
+
+def show_all_pitching(request, order="win"):
+	
+	return redirect("/")
+
+
 def login_view(request):
 	
 	if request.method != 'POST':

@@ -3,6 +3,15 @@
 	{{thisteam.name}}球隊成員
 {% endblock title %}
 
+{% block navbar %}
+<ul class="nav navbar-nav">
+    <li class="active"><a href="/member">成員</a></li>
+    <li><a href="/game">戰績</a></li>
+    <li><a href="/batting">打擊排行</a></li>
+    <li><a href="/pitching">投手排行</a></li>
+</ul>
+{% endblock navbar %}
+
 {% block content %}
 
 	<div class="container">

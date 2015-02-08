@@ -1,0 +1,128 @@
+{% extends "basic.html" %}
+{% block title %}
+	打擊排行
+{% endblock title %}
+
+{% block navbar %}
+<ul class="nav navbar-nav">
+    <li><a href="/member">成員</a></li>
+    <li><a href="/game">戰績</a></li>
+    <li class="active"><a href="/batting">打擊排行</a></li>
+    <li><a href="/pitching">投手排行</a></li>
+</ul>
+{% endblock navbar %}
+
+
+{% block content %}
+
+<div class="container">
+
+	<form action="{% url 'show_all_batting' %}" method = "post">
+		{% csrf_token %}
+
+		<div class="row">
+			
+			<span class="btn-group">
+				<select class="form-control" name="selected-year" onchange="submit_options(this)">
+					<option value=0>Year</option>
+				  	{% for year in years %}
+				  		{% if year == selected_year %}
+							<option selected>{{year}}</option>
+				  		{% else %}
+				  			<option>{{year}}</option>
+				  		{% endif %}
+				    {% endfor %}
+				</select>
+			</span>
+
+			<span class="btn-group">
+				<select class="form-control" name="selected-month" onchange="submit_options(this)">
+					<option value=0>Month</option>
+				  	{% for month in months %}
+				  		{% if month == selected_month %}
+							<option value={{month}} selected>{{month}}月</option>
+				  		{% else %}
+				  			<option value={{month}}>{{month}}月</option>
+				  		{% endif %}
+						
+				    {% endfor %}
+				</select>
+			</span>
+
+			<span class="btn-group">
+				<select class="form-control" name="selected-league" onchange="submit_options(this)">
+					<option value=0>Game</option>
+				  	{% for league in leagues %}
+				  		{% if league.id == selected_league %}
+							<option value={{league.id}} selected>{{league.name}}</option>
+				  		{% else %}
+				  			<option value={{league.id}}>{{league.name}}</option>
+				  		{% endif %}
+						
+				    {% endfor %}
+				</select>
+			</span>	
+
+		</div>
+
+		<div class="row">
+			<table class="table table-hover table-bordered table-condensed tablesorter" id="all_batting_table">
+				<thead>
+					<tr>
+						<th>姓名</th>
+						<th>出賽</th>
+						<th>打席</th>
+						<th>打數</th>
+						<th>安打</th>
+						<th>一安</th>
+						<th>二安</th>
+						<th>三安</th>
+						<th>全壘打</th>
+						<th>打點</th>
+						<th>得分</th>
+						<th>保送</th>
+						<th>三振</th>
+						<th>犧牲</th>
+						<th>打擊率</th>
+						<th>上壘率</th>
+						<th>長打率</th>
+						<th>攻擊指數</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for batting in batting_list %}
+					<tr>
+						<td><a href="/member/{{batting.member.id}}">{{batting.member.name}}</a></td>
+		                <td>{{batting.gp}}</td>
+						<td>{{batting.pa}}</td>
+						<td>{{batting.ab}}</td>
+						<td>{{batting.hit}}</td>
+						<td>{{batting.single}}</td>
+						<td>{{batting.double}}</td>
+						<td>{{batting.triple}}</td>
+						<td>{{batting.hr}}</td>
+						<td>{{batting.rbi}}</td>
+						<td>{{batting.run}}</td>
+						<td>{{batting.bb}}</td>
+						<td>{{batting.k}}</td>
+						<td>{{batting.sf}}</td>
+						<td>{{batting.avg_s}}</td>
+						<td>{{batting.obp_s}}</td>
+						<td>{{batting.slg_s}}</td>
+						<td>{{batting.ops_s}}</td>		
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	
+	</form>
+</div>
+
+
+<div class="footer">
+    <div class="container">
+    </div>
+</div>
+
+{% endblock content %}

@@ -63,27 +63,9 @@ $(document).ready(function() {
             boxs[i].value = '0';
         }
     }
-/*
-    // use local storage (cookie) to store tab
-     $('#member-tab a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-    });
 
-    // store the currently selected tab in the hash value
-    $("ul.nav-tabs > li > a").on("shown.bs.tab", function (e) {
-        var id = $(e.target).attr("href").substr(1);
-        window.location.hash = id;
-    });
 
-    // on load of the page: switch to the currently selected tab
-    var hash = window.location.hash;
-    $('#member-tab a[href="' + hash + '"]').tab('show');
-*/
-  
-
- //console.log($('a[data-toggle="tab"]:first').tab('show'))
-
+    // store last tab in cookies
     $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
         //save the latest tab; use cookies if you like 'em better:
         localStorage.setItem('lastTab', $(this).attr('href'));
@@ -100,12 +82,13 @@ $(document).ready(function() {
     {
         // Set the first tab if cookie do not exist
         var element = document.getElementById("Game-Log");
-        element.className += " active";
         $('a[data-toggle="tab"]:first').tab('show');
         console.log("show first tab");
     }
+   
+    // table sort
+    $("#all_batting_table").tablesorter(); 
     
-
 });
 
 
@@ -147,6 +130,5 @@ function check_wl(current_box){
 }
 
 function submit_options(selector){
-    console.log(selector.value);
     selector.form.submit();
 }

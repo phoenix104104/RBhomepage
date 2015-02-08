@@ -10,22 +10,23 @@
 
 	<title>{% block title %}Robber Barons{% endblock title %}</title>
 
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="{% static 'css/basic.css' %}" type="text/css">
 	<link rel="stylesheet" href="{% static 'css/jquery-linedtextarea.css' %}" type="text/css">
 	<link rel="stylesheet" href="{% static 'css/formValidation.min.css' %}" type="text/css">
+	<link rel="stylesheet" href="{% static 'css/tablesorter_blue.css' %}" type="text/css">
 
 
 	<link rel="shortcut icon" href="{% static 'images/ntusbleague.jpg' %}">
 
 	<script src="http://code.jquery.com/jquery.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<script src="{% static 'js/basic.js' %}"></script>
 	<script src="{% static 'js/jquery-linedtextarea.js' %}"></script>
 	<script src="{% static 'js/formValidation.min.js' %}"></script>
 	<script src="{% static 'js/formValidation-bootstrap.min.js' %}"></script>
-	
+	<script src="{% static 'js/jquery.tablesorter.js' %}"></script> 
 </script>
 </head>
 
@@ -55,8 +56,8 @@
 				    <ul class="nav navbar-nav">
 					    <li><a href="/member">成員</a></li>
 					    <li><a href="/game">戰績</a></li>
-					    <li><a href="/batting/avg">打擊排行</a></li>
-					    <li><a href="/pitching/win">投手排行</a></li>
+					    <li><a href="/batting">打擊排行</a></li>
+					    <li><a href="/pitching">投手排行</a></li>
 				    </ul>
 				    {% endblock navbar %}
 			    

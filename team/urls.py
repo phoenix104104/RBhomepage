@@ -10,4 +10,6 @@ urlpatterns = [
 	url(r'^member/(?P<member_id>\d+)/$',views.show_member, 		name='show_member'),
 	url(r'^addgame/$',					views.add_game,			name='add_game'),
 	url(r'^editgame/(?P<game_id>\d+)/$',views.edit_game,		name='edit_game'),
+	url(r'^batting/$',					views.show_all_batting, name='show_all_batting'),
+    url(r'^pitching/$',					views.show_all_pitching,name='show_all_pitching'),
 ]

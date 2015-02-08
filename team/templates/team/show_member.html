@@ -1,4 +1,3 @@
-
 {% extends "basic.html" %}
 {% block title %}
 	{{member.name}}-個人記錄
@@ -8,8 +7,8 @@
 <ul class="nav navbar-nav">
     <li class="active"><a href="/member">成員</a></li>
     <li><a href="/game">戰績</a></li>
-    <li><a href="/batting/avg">打擊排行</a></li>
-    <li><a href="/pitching/win">投手排行</a></li>
+    <li><a href="/batting">打擊排行</a></li>
+    <li><a href="/pitching">投手排行</a></li>
 </ul>
 {% endblock navbar %}
 
@@ -19,7 +18,7 @@
 	<h4><b>{{member.name}}</b></h4>
 	<br>
 
-	<form action="" method = "post">
+	<form action="{% url 'show_member' member.id %}" method = "post">
 	{% csrf_token %}
 
 	<div class="row">

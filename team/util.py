@@ -56,6 +56,31 @@ def gather_team_scores_from_web(request, HA):
 
     return scores
 
+def calculate_batting_rank(batting_all):
+	
+	player_map = {}
+
+	for batting in batting_all:
+		player = statBatting()
+		player.copy(batting)
+		
+		id = batting.member.id
+		
+		if( not player_map.has_key(id) ):
+			player_map[id] = player
+		else:
+			player_map[id].add(player)
+		
+	for player in player_map.values():
+		print player.member.name
+		player.stat()
+
+	batting_list = player_map.values()
+	
+	return batting_list
+
+
+
 # collect all statistic for webpage
 class statBatting():
 	game    = None
