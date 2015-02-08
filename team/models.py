@@ -5,7 +5,8 @@ class Member(models.Model):
 	id 		= models.AutoField(primary_key=True)
 	name 	= models.CharField(max_length=100, default="")
 	number  = models.IntegerField(default=0)
-
+	title   = models.CharField(max_length=100, default="")
+	
 	def __unicode__(self):
 		return "%s(%d)" %(self.name, self.number)
 
@@ -79,4 +80,4 @@ class Pitching(models.Model):
 	lose    = models.IntegerField(default=0)
 	
 	def __unicode__(self):
-		return self.member.name + ' ' + str(self.game.date) + ' ' + self.game.home_name + 'vs' + self.game.away_name
+		return self.member.name + ' ' + str(self.game.date) + ' ' + self.game.home_name + ' vs ' + self.game.away_name

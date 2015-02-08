@@ -86,8 +86,10 @@ $(document).ready(function() {
         console.log("show first tab");
     }
    
-    // table sort
-    $("#all_batting_table").tablesorter(); 
+
+    // enable table sort
+    $("#all_batting_table").tablesorter();
+    $("#all_pitching_table").tablesorter();
     
 });
 

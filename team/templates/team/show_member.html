@@ -21,336 +21,334 @@
 	<form action="{% url 'show_member' member.id %}" method = "post">
 	{% csrf_token %}
 
-	<div class="row">
-		
-		<div role="tabpanel">
-		  	<!-- Nav tabs -->
-		  	<ul class="nav nav-tabs" role="tablist" id="member-tab">
-		    	<li class="active" role="presentation"><a href="#Game-Log" aria-controls="Game-Log" role="tab" data-toggle="tab">Game-Log</a></li>
-		    	<li role="presentation"><a href="#Career" aria-controls="Career" role="tab" data-toggle="tab">Career</a></li>
-		  	</ul>
+		<div class="row">
+			
+			<div role="tabpanel">
+			  	<!-- Nav tabs -->
+			  	<ul class="nav nav-tabs" role="tablist" id="member-tab">
+			    	<li class="active" role="presentation"><a href="#Game-Log" aria-controls="Game-Log" role="tab" data-toggle="tab">Game-Log</a></li>
+			    	<li role="presentation"><a href="#Career" aria-controls="Career" role="tab" data-toggle="tab">Career</a></li>
+			  	</ul>
 
-		  	<!-- Tab panes -->
-		  	<div class="tab-content">
+			  	<!-- Tab panes -->
+			  	<div class="tab-content">
 
-		  		<!-- Game Log -->
-			    <div role="tabpanel" class="tab-pane fade in active" id="Game-Log">
+			  		<!-- Game Log -->
+				    <div role="tabpanel" class="tab-pane fade in active" id="Game-Log">
 
-					<span class="btn-group">
-						<select class="form-control" name="log-selected-year" onchange="submit_options(this)">
-							<option value=0>Year</option>
-						  	{% for year in years %}
-						  		{% if year == log_selected_year %}
-									<option selected>{{year}}</option>
-						  		{% else %}
-						  			<option>{{year}}</option>
-						  		{% endif %}
-						    {% endfor %}
-						</select>
-					</span>
+						<span class="btn-group">
+							<select class="form-control" name="log-selected-year" onchange="submit_options(this)">
+								<option value=0>Year</option>
+							  	{% for year in years %}
+							  		{% if year == log_selected_year %}
+										<option selected>{{year}}</option>
+							  		{% else %}
+							  			<option>{{year}}</option>
+							  		{% endif %}
+							    {% endfor %}
+							</select>
+						</span>
 
-					<span class="btn-group">
-						<select class="form-control" name="log-selected-month" onchange="submit_options(this)">
-							<option value=0>Month</option>
-						  	{% for month in months %}
-						  		{% if month == log_selected_month %}
-									<option value={{month}} selected>{{month}}月</option>
-						  		{% else %}
-						  			<option value={{month}}>{{month}}月</option>
-						  		{% endif %}
-								
-						    {% endfor %}
-						</select>
-					</span>
+						<span class="btn-group">
+							<select class="form-control" name="log-selected-month" onchange="submit_options(this)">
+								<option value=0>Month</option>
+							  	{% for month in months %}
+							  		{% if month == log_selected_month %}
+										<option value={{month}} selected>{{month}}月</option>
+							  		{% else %}
+							  			<option value={{month}}>{{month}}月</option>
+							  		{% endif %}
+									
+							    {% endfor %}
+							</select>
+						</span>
 
-					<span class="btn-group">
-						<select class="form-control" name="log-selected-league" onchange="submit_options(this)">
-							<option value=0>League</option>
-						  	{% for league in leagues %}
-						  		{% if league.id == log_selected_league %}
-									<option value={{league.id}} selected>{{league.name}}</option>
-						  		{% else %}
-						  			<option value={{league.id}}>{{league.name}}</option>
-						  		{% endif %}
-								
-						    {% endfor %}
-						</select>
-					</span>
-						
-				
-					<table class="table table-hover table-bordered table-condensed">
-						<thead>
-							<tr>
-								<th colspan="19" class="table-title">打擊成績</th>
-							</tr>
-							<tr>
-								<th>日期</th>
-								<th>聯賽</th>
-								<th>對手</th>
-								<th>打席</th>
-								<th>打數</th>
-								<th>安打</th>
-								<th>一安</th>
-								<th>二安</th>
-								<th>三安</th>
-								<th>全壘打</th>
-								<th>打點</th>
-								<th>得分</th>
-								<th>保送</th>
-								<th>三振</th>
-								<th>犧牲打</th>
-								<th>打擊率</th>
-								<th>上壘率</th>
-								<th>長打率</th>
-								<th>攻擊指數</th>
-							</tr>
-						</thead>
-						<tbody>
-						{% for batting in log_batting_list %}
-							<tr>
-								<td><a href="/game/{{batting.game.id}}">{{batting.game.date}}</a></td>
-								<td>{{batting.game.league}}</td>
-								<td>{{batting.opp}}</td>
-								<td>{{batting.pa}}</td>
-								<td>{{batting.ab}}</td>
-								<td>{{batting.hit}}</td>
-								<td>{{batting.single}}</td>
-								<td>{{batting.double}}</td>
-								<td>{{batting.triple}}</td>
-								<td>{{batting.hr}}</td>
-								<td>{{batting.rbi}}</td>
-								<td>{{batting.run}}</td>
-								<td>{{batting.bb}}</td>
-								<td>{{batting.k}}</td>
-								<td>{{batting.sf}}</td>
-								<td>{{batting.avg_s}}</td>
-								<td>{{batting.obp_s}}</td>
-								<td>{{batting.slg_s}}</td>
-								<td>{{batting.ops_s}}</td>
-							</tr>
-						{% endfor %}
-						</tbody>
-					</table>			    	
+						<span class="btn-group">
+							<select class="form-control" name="log-selected-league" onchange="submit_options(this)">
+								<option value=0>League</option>
+							  	{% for league in leagues %}
+							  		{% if league.id == log_selected_league %}
+										<option value={{league.id}} selected>{{league.name}}</option>
+							  		{% else %}
+							  			<option value={{league.id}}>{{league.name}}</option>
+							  		{% endif %}
+									
+							    {% endfor %}
+							</select>
+						</span>
+							
+					
+						<table class="table table-hover table-bordered table-condensed">
+							<thead>
+								<tr>
+									<th colspan="19" class="table-title">打擊成績</th>
+								</tr>
+								<tr>
+									<th>日期</th>
+									<th>聯賽</th>
+									<th>對手</th>
+									<th>打席</th>
+									<th>打數</th>
+									<th>安打</th>
+									<th>一安</th>
+									<th>二安</th>
+									<th>三安</th>
+									<th>全壘打</th>
+									<th>打點</th>
+									<th>得分</th>
+									<th>保送</th>
+									<th>三振</th>
+									<th>犧牲打</th>
+									<th>打擊率</th>
+									<th>上壘率</th>
+									<th>長打率</th>
+									<th>攻擊指數</th>
+								</tr>
+							</thead>
+							<tbody>
+							{% for batting in log_batting_list %}
+								<tr>
+									<td><a href="/game/{{batting.game.id}}">{{batting.game.date}}</a></td>
+									<td>{{batting.game.league}}</td>
+									<td>{{batting.opp}}</td>
+									<td>{{batting.pa}}</td>
+									<td>{{batting.ab}}</td>
+									<td>{{batting.hit}}</td>
+									<td>{{batting.single}}</td>
+									<td>{{batting.double}}</td>
+									<td>{{batting.triple}}</td>
+									<td>{{batting.hr}}</td>
+									<td>{{batting.rbi}}</td>
+									<td>{{batting.run}}</td>
+									<td>{{batting.bb}}</td>
+									<td>{{batting.k}}</td>
+									<td>{{batting.sf}}</td>
+									<td>{{batting.avg_s}}</td>
+									<td>{{batting.obp_s}}</td>
+									<td>{{batting.slg_s}}</td>
+									<td>{{batting.ops_s}}</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>			    	
 
-			    	<table class="table table-hover table-bordered table-condensed">
-						<thead>
-							<tr>
-								<th colspan="18" class="table-title">投球成績</th>
-							</tr>
-							<tr>
-								<th>日期</th>
-								<th>聯賽</th>
-								<th>對手</th>
-								<th>勝投</th>
-								<th>敗投</th>
-								<th>打席</th>
-								<th>局數</th>
-								<th>奪三振</th>
-								<th>被安打</th>
-								<th>保送</th>
-								<th>被全壘打</th>
-								<th>失分</th>
-								<th>責失分</th>
-								<th>滾地出局</th>
-								<th>飛球出局</th>
-								<th>自責分率</th>
-								<th>被上壘率</th>
-							</tr>
-						</thead>
-						<tbody>
-						{% for pitching in log_pitching_list %}
-							<tr>
-								<td><a href="/game/{{pitching.game.id}}">{{pitching.game.date}}</a></td>
-								<td>{{pitching.game.league}}</td>
-								<td>{{pitching.opp}}</td>
-								<td>{{pitching.win}}</td>
-								<td>{{pitching.lose}}</td>
-								<td>{{pitching.pa}}</td>
-								<td>{{pitching.inning}}</td>
-								<td>{{pitching.k}}</td>
-								<td>{{pitching.hit}}</td>
-								<td>{{pitching.bb}}</td>
-								<td>{{pitching.hr}}</td>
-								<td>{{pitching.run}}</td>
-								<td>{{pitching.er}}</td>
-								<td>{{pitching.go}}</td>
-								<td>{{pitching.fo}}</td>
-								<td>{{pitching.era_s}}</td>
-								<td>{{pitching.whip_s}}</td>
-							</tr>
-						{% endfor %}
-						</tbody>
-					</table>
-
-
-			    </div>
-				<!-- end of Game Log -->
-
-				<!-- Career -->
-			    <div role="tabpanel" class="tab-pane fade" id="Career">
-			    	
-					<span class="btn-group">
-						<select class="form-control" name="career-selected-year" onchange="submit_options(this)">
-							<option value=0>Year</option>
-						  	{% for year in years %}
-						  		{% if year == career_selected_year %}
-									<option selected>{{year}}</option>
-						  		{% else %}
-						  			<option>{{year}}</option>
-						  		{% endif %}
-						    {% endfor %}
-						</select>
-					</span>
-
-					<span class="btn-group">
-						<select class="form-control" name="career-selected-league" onchange="submit_options(this)">
-							<option value=0>League</option>
-						  	{% for league in leagues %}
-						  		{% if league.id == career_selected_league %}
-									<option value={{league.id}} selected>{{league.name}}</option>
-						  		{% else %}
-						  			<option value={{league.id}}>{{league.name}}</option>
-						  		{% endif %}
-								
-						    {% endfor %}
-						</select>
-					</span>
+				    	<table class="table table-hover table-bordered table-condensed">
+							<thead>
+								<tr>
+									<th colspan="18" class="table-title">投球成績</th>
+								</tr>
+								<tr>
+									<th>日期</th>
+									<th>聯賽</th>
+									<th>對手</th>
+									<th>勝投</th>
+									<th>敗投</th>
+									<th>打席</th>
+									<th>局數</th>
+									<th>奪三振</th>
+									<th>被安打</th>
+									<th>保送</th>
+									<th>被全壘打</th>
+									<th>失分</th>
+									<th>責失分</th>
+									<th>滾地出局</th>
+									<th>飛球出局</th>
+									<th>自責分率</th>
+									<th>被上壘率</th>
+								</tr>
+							</thead>
+							<tbody>
+							{% for pitching in log_pitching_list %}
+								<tr>
+									<td><a href="/game/{{pitching.game.id}}">{{pitching.game.date}}</a></td>
+									<td>{{pitching.game.league}}</td>
+									<td>{{pitching.opp}}</td>
+									<td>{{pitching.win}}</td>
+									<td>{{pitching.lose}}</td>
+									<td>{{pitching.pa}}</td>
+									<td>{{pitching.inning}}</td>
+									<td>{{pitching.k}}</td>
+									<td>{{pitching.hit}}</td>
+									<td>{{pitching.bb}}</td>
+									<td>{{pitching.hr}}</td>
+									<td>{{pitching.run}}</td>
+									<td>{{pitching.er}}</td>
+									<td>{{pitching.go}}</td>
+									<td>{{pitching.fo}}</td>
+									<td>{{pitching.era_s}}</td>
+									<td>{{pitching.whip_s}}</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
 
 
-					<table class="table table-hover table-bordered table-condensed">
-						<thead>
-							<tr>
-								<th colspan="18" class="table-title">生涯打擊成績</th>
-							</tr>
-							<tr>
-							{% if career_selected_year == 0 %}
-								<th>球季</th>
-							{% else %}
-								<th>月份</th>
-							{% endif %}
-								<th>出賽</th>
-								<th>打席</th>
-								<th>打數</th>
-								<th>安打</th>
-								<th>一安</th>
-								<th>二安</th>
-								<th>三安</th>
-								<th>全壘打</th>
-								<th>打點</th>
-								<th>得分</th>
-								<th>保送</th>
-								<th>三振</th>
-								<th>犧牲打</th>
-								<th>打擊率</th>
-								<th>上壘率</th>
-								<th>長打率</th>
-								<th>攻擊指數</th>
-							</tr>
-						</thead>
-						<tbody>
-						{% for batting in career_batting_list %}
-							<tr>
-							{% if career_selected_year == 0 %}
-								<td>{{batting.year}}</td>
-							{% else %}
-								<td>{{batting.month}}月</td>
-							{% endif %}
-								<td>{{batting.gp}}</td>
-								<td>{{batting.pa}}</td>
-								<td>{{batting.ab}}</td>
-								<td>{{batting.hit}}</td>
-								<td>{{batting.single}}</td>
-								<td>{{batting.double}}</td>
-								<td>{{batting.triple}}</td>
-								<td>{{batting.hr}}</td>
-								<td>{{batting.rbi}}</td>
-								<td>{{batting.run}}</td>
-								<td>{{batting.bb}}</td>
-								<td>{{batting.k}}</td>
-								<td>{{batting.sf}}</td>
-								<td>{{batting.avg_s}}</td>
-								<td>{{batting.obp_s}}</td>
-								<td>{{batting.slg_s}}</td>
-								<td>{{batting.ops_s}}</td>
-							</tr>
-						{% endfor %}
-						</tbody>
+				    </div>
+					<!-- end of Game Log -->
 
-					</table>
+					<!-- Career -->
+				    <div role="tabpanel" class="tab-pane fade" id="Career">
+				    	
+						<span class="btn-group">
+							<select class="form-control" name="career-selected-year" onchange="submit_options(this)">
+								<option value=0>Year</option>
+							  	{% for year in years %}
+							  		{% if year == career_selected_year %}
+										<option selected>{{year}}</option>
+							  		{% else %}
+							  			<option>{{year}}</option>
+							  		{% endif %}
+							    {% endfor %}
+							</select>
+						</span>
 
-			    	<table class="table table-hover table-bordered table-condensed">
-						<thead>
-							<tr>
-								<th colspan="18" class="table-title">生涯投球成績</th>
-							</tr>
-							<tr>
-							{% if career_selected_year == 0 %}
-								<th>球季</th>
-							{% else %}
-								<th>月份</th>
-							{% endif %}
-								<th>出賽</th>
-								<th>勝投</th>
-								<th>敗投</th>
-								<th>打席</th>
-								<th>局數</th>
-								<th>奪三振</th>
-								<th>被安打</th>
-								<th>保送</th>
-								<th>被全壘打</th>
-								<th>失分</th>
-								<th>責失分</th>
-								<th>滾地出局</th>
-								<th>飛球出局</th>
-								<th>自責分率</th>
-								<th>被上壘率</th>
-							</tr>
-						</thead>
-						<tbody>
-						{% for pitching in career_pitching_list %}
-							<tr>
-							{% if career_selected_year == 0 %}
-								<td>{{pitching.year}}</td>
-							{% else %}
-								<td>{{pitching.month}}月</td>
-							{% endif %}
-								<td>{{pitching.gp}}</td>
-								<td>{{pitching.win}}</td>
-								<td>{{pitching.lose}}</td>
-								<td>{{pitching.pa}}</td>
-								<td>{{pitching.inning}}</td>
-								<td>{{pitching.k}}</td>
-								<td>{{pitching.hit}}</td>
-								<td>{{pitching.bb}}</td>
-								<td>{{pitching.hr}}</td>
-								<td>{{pitching.run}}</td>
-								<td>{{pitching.er}}</td>
-								<td>{{pitching.go}}</td>
-								<td>{{pitching.fo}}</td>
-								<td>{{pitching.era_s}}</td>
-								<td>{{pitching.whip_s}}</td>
-							</tr>
-						{% endfor %}
-						</tbody>
+						<span class="btn-group">
+							<select class="form-control" name="career-selected-league" onchange="submit_options(this)">
+								<option value=0>League</option>
+							  	{% for league in leagues %}
+							  		{% if league.id == career_selected_league %}
+										<option value={{league.id}} selected>{{league.name}}</option>
+							  		{% else %}
+							  			<option value={{league.id}}>{{league.name}}</option>
+							  		{% endif %}
+									
+							    {% endfor %}
+							</select>
+						</span>
 
-					</table>			    	
 
-			    </div>
-				<!-- end of Career -->
+						<table class="table table-hover table-bordered table-condensed">
+							<thead>
+								<tr>
+									<th colspan="18" class="table-title">生涯打擊成績</th>
+								</tr>
+								<tr>
+								{% if career_selected_year == 0 %}
+									<th>球季</th>
+								{% else %}
+									<th>月份</th>
+								{% endif %}
+									<th>出賽</th>
+									<th>打席</th>
+									<th>打數</th>
+									<th>安打</th>
+									<th>一安</th>
+									<th>二安</th>
+									<th>三安</th>
+									<th>全壘打</th>
+									<th>打點</th>
+									<th>得分</th>
+									<th>保送</th>
+									<th>三振</th>
+									<th>犧牲打</th>
+									<th>打擊率</th>
+									<th>上壘率</th>
+									<th>長打率</th>
+									<th>攻擊指數</th>
+								</tr>
+							</thead>
+							<tbody>
+							{% for batting in career_batting_list %}
+								<tr>
+								{% if career_selected_year == 0 %}
+									<td>{{batting.year}}</td>
+								{% else %}
+									<td>{{batting.month}}月</td>
+								{% endif %}
+									<td>{{batting.gp}}</td>
+									<td>{{batting.pa}}</td>
+									<td>{{batting.ab}}</td>
+									<td>{{batting.hit}}</td>
+									<td>{{batting.single}}</td>
+									<td>{{batting.double}}</td>
+									<td>{{batting.triple}}</td>
+									<td>{{batting.hr}}</td>
+									<td>{{batting.rbi}}</td>
+									<td>{{batting.run}}</td>
+									<td>{{batting.bb}}</td>
+									<td>{{batting.k}}</td>
+									<td>{{batting.sf}}</td>
+									<td>{{batting.avg_s}}</td>
+									<td>{{batting.obp_s}}</td>
+									<td>{{batting.slg_s}}</td>
+									<td>{{batting.ops_s}}</td>
+								</tr>
+							{% endfor %}
+							</tbody>
 
-		  	</div>
+						</table>
 
+				    	<table class="table table-hover table-bordered table-condensed">
+							<thead>
+								<tr>
+									<th colspan="18" class="table-title">生涯投球成績</th>
+								</tr>
+								<tr>
+								{% if career_selected_year == 0 %}
+									<th>球季</th>
+								{% else %}
+									<th>月份</th>
+								{% endif %}
+									<th>出賽</th>
+									<th>勝投</th>
+									<th>敗投</th>
+									<th>打席</th>
+									<th>局數</th>
+									<th>奪三振</th>
+									<th>被安打</th>
+									<th>保送</th>
+									<th>被全壘打</th>
+									<th>失分</th>
+									<th>責失分</th>
+									<th>滾地出局</th>
+									<th>飛球出局</th>
+									<th>自責分率</th>
+									<th>被上壘率</th>
+								</tr>
+							</thead>
+							<tbody>
+							{% for pitching in career_pitching_list %}
+								<tr>
+								{% if career_selected_year == 0 %}
+									<td>{{pitching.year}}</td>
+								{% else %}
+									<td>{{pitching.month}}月</td>
+								{% endif %}
+									<td>{{pitching.gp}}</td>
+									<td>{{pitching.win}}</td>
+									<td>{{pitching.lose}}</td>
+									<td>{{pitching.pa}}</td>
+									<td>{{pitching.inning}}</td>
+									<td>{{pitching.k}}</td>
+									<td>{{pitching.hit}}</td>
+									<td>{{pitching.bb}}</td>
+									<td>{{pitching.hr}}</td>
+									<td>{{pitching.run}}</td>
+									<td>{{pitching.er}}</td>
+									<td>{{pitching.go}}</td>
+									<td>{{pitching.fo}}</td>
+									<td>{{pitching.era_s}}</td>
+									<td>{{pitching.whip_s}}</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+
+						</table>			    	
+
+				    </div>
+					<!-- end of Career -->
+
+			  	</div>
+
+			</div>
+
+			
 		</div>
-
-		
-	</div>
 
 	</form>
 
-	
-
 </div>
-<br><br>
+
 
 
 {% endblock content %}

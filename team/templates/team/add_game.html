@@ -36,7 +36,7 @@
 									{% endfor %}
 								</select>
                             </div>
-                            <div class="col-sm-2 btn btn-default" data-toggle="modal" data-target="#new-league-modal">新增</div>
+                            <div class="col-sm-2 btn btn-success" data-toggle="modal" data-target="#new-league-modal">新增</div>
     					</div>
 
     					<div class="form-group">
@@ -129,29 +129,31 @@
                 <textarea class="record-table lined" name="record_text" rows="11">{{game.record}}</textarea>
             </div>
         </div>
-
-
 		
 		<br>
-		<div class="row">
-            <div class="panel-group" role="tablist">
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="collapseListGroupHeading1" data-toggle="collapse" href="#collapseListGroup1" aria-expanded="false" aria-controls="collapseListGroup1">
-                        <h4 class="panel-title title">
-                            <a class="collapsed" >
-                                記錄寫法
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseListGroup1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingListGroupHeading1">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-<pre>姓名or背號  守位  PA  PA  PA
 
-PA：(換投/代打/)方位/記錄/註解
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+	            <div class="panel-group" role="tablist">
+	                <div class="panel panel-default">
+	                    <div class="panel-heading" role="tab" id="collapseListGroupHeading1" data-toggle="collapse" href="#collapseListGroup1" aria-expanded="false" aria-controls="collapseListGroup1">
+	                        <h4 class="panel-title title">
+	                            <a class="collapsed" >
+	                                記錄寫法
+	                            </a>
+	                        </h4>
+	                    </div>
+	                    <div id="collapseListGroup1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingListGroupHeading1">
+	                        <ul class="list-group">
+	                            <li class="list-group-item">
+<pre>每一行要有：姓名or背號  守位  PA  PA  PA...
+
+守位：一定要有一個P(投手)，其他可隨意
+
+PA記法：(換投/代打/)方位/記錄/註記
 換投：p + 姓名or背號
 代打：r + 背號or背號
-方位：可以是守備代號(1~10)或L、R、C
+方位：可以是守備代號(1~10)、L、R、C或不寫
 記錄：1B  一壘安打
       2B  二壘安打
       3B  三壘安打
@@ -168,13 +170,18 @@ PA：(換投/代打/)方位/記錄/註解
       CB  投手強襲球(combacker)
       IF  內野高飛必死球(Infield Fly)
       FO  界外飛球接殺(Foul Out)
+      DO  直接出局(Direct Our)，用於人數不夠開打時，算一個出局數
+      NP  跳過棒次(No Play)，不算出局數
         
-註解：1~4 打點
+註記：1~4 打點
       r   得分
-      x   出局數(目前這個打席造成的出局數，而非球員出局。DP, K, G, F, SF, IB, CB, IF, FO不必寫x，FC和其他情形一定要寫)
+      x   出局數(目前這個打席造成的出局數，而非球員出局。見註1)
       #   換局
       !   比賽結束
       *   補充說明
+
+註1: DP, K, G, F, SF, IB, CB, IF, FO不必寫x，FC若有造成出局一定要寫x，有特殊情形造成兩個出局則寫xx(ex. 外野飛球+助殺: 7/F/xx)
+
 
 Example:
 
@@ -189,21 +196,48 @@ Example:
 21  RF  1/E     6/FC/x#
 77  FF  K/#     1/G
 </pre></li>      
-                        </ul>
-                    </div>
-                </div>
-            </div>
+	                        </ul>
+	                    </div>
+	                </div>
+	            </div>
+			</div>
 		</div>
-
 
 		<br>
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4 button">
+				<span class="btn btn-success" data-toggle="modal" data-target="#new-member-modal">新增球員</span>
 				<input type="submit" class="btn btn-primary" name="preview-btn" value="預覽">
-				<input type="submit" class="btn btn-success" name="download-btn" value="下載PTT記錄檔">
 			</div>
 		</div>
 		
+		<!-- hidden modal -->
+		<div class="modal fade" id="new-member-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+		    	<div class="modal-content">
+		    		<div class="modal-header login_modal_header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        		<h4 class="modal-title" id="myModalLabel">新增成員</h4>
+		      		</div>
+
+		      		<div class="modal-body form-horizontal">
+		      			<div class="form-group">
+					    	<label class="col-sm-3 control-label">姓名</label>
+		                    <div class="col-sm-9"><input type="text" class="form-control" name="new-member-name" placeholder="Name"/></div>
+					    </div>
+						<div class="form-group">
+					    	<label class="col-sm-3 control-label">背號</label>
+		                    <div class="col-sm-9"><input type="number" class="form-control" name="new-member-number" placeholder="Number"/></div>
+					    </div>
+						
+						<div class="form-group text-center">
+							<input type="submit" class="btn btn-success" name="add-new-member-btn" value="確認">
+						</div>
+		      		</div>
+		      	</div>
+		    </div>
+		</div>
+
 		<br>
 
 	    <div class="preview">

@@ -14,40 +14,40 @@
 {% endblock navbar %}
 
 {% block content %}
-	<div class="container">
-		
-		<div class="row">
-			<div class="col-md-10 col-md-offset-1">
-				<table class="table table-hover table-bordered fixed-width table-condensed">
-					<thead>
-						<tr>
-							<th colspan="6" class="table-title">已賽賽程</th>
-						</tr>
-						<tr>
-							<th>日期</th>
-							<th>地點</th>
-							<th>聯賽</th>
-							<th>客隊</th>
-							<th>主隊</th>
-							<th>比分</th>
-						</tr>
-					</thead>
-					<tbody>
-					{% for game in game_list %}
-						<tr>
-							<td><a href="/game/{{game.id}}">{{game.date}}</a></td>
-							<td>{{game.location}}</td>
-							<td>{{game.league}}</td>
-							<td>{{game.away_name}}</td>
-							<td>{{game.home_name}}</td>
-							<td>{{game.scores}}</td>
-						</tr>
-					{% endfor %}
-					</tbody>
-				</table>
-			</div>
+<div class="container">
+	
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1">
+			<table class="table table-hover table-bordered fixed-width table-condensed">
+				<thead>
+					<tr>
+						<th colspan="6" class="table-title">已賽賽程</th>
+					</tr>
+					<tr>
+						<th>日期</th>
+						<th>地點</th>
+						<th>聯賽</th>
+						<th>客隊</th>
+						<th>主隊</th>
+						<th>比分</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for game in game_list %}
+					<tr>
+						<td><a href="/game/{{game.id}}">{{game.date}}</a></td>
+						<td>{{game.location}}</td>
+						<td>{{game.league}}</td>
+						<td>{{game.away_name}}</td>
+						<td>{{game.home_name}}</td>
+						<td>{{game.scores}}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
 		</div>
-		
 	</div>
+	
+</div>
 
 {% endblock content %}

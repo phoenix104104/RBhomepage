@@ -111,6 +111,18 @@ def show_game(request, game_id) :
 			
 
 
+def show_all_member(request):
+
+	member_list = Member.objects.filter(title = '')
+	captain  = Member.objects.get(title = '隊長')
+	coach 	 = Member.objects.get(title = '教練')
+	finance  = Member.objects.get(title = '預財')
+	chairman = Member.objects.get(title = '董事')
+
+	context = {'member_list': member_list, 'captain': captain, 'coach': coach, 'finance': finance, 'chairman': chairman}
+
+	return render(request, 'team/show_all_member.html', context)
+
 def show_member(request, member_id):
 
 	member = Member.objects.get(id = member_id)
@@ -338,8 +350,6 @@ def show_all_batting(request):
 		selected_month 	= int(request.POST.get("selected-month"))
 		selected_league	= int(request.POST.get("selected-league"))
 
-
-	# --- batting
 	batting_all = Batting.objects.all()
 	if( selected_year != 0 ):
 		batting_all  = batting_all.filter(game__date__year = selected_year)
@@ -348,9 +358,25 @@ def show_all_batting(request):
 	if( selected_league != 0 ):
 		batting_all  = batting_all.filter(game__league__id = selected_league)
 
-	batting_list = calculate_batting_rank(batting_all)
 
-	batting_list = sorted(batting_list, key=attrgetter("avg"), reverse=True)
+	##### calculate rank
+	player_map = {}
+	for batting in batting_all:
+		player = statBatting()
+		player.copy(batting)
+		
+		id = batting.member.id
+		
+		if( not player_map.has_key(id) ):
+			player_map[id] = player
+		else:
+			player_map[id].add(player)
+		
+	for player in player_map.values():
+		print player.member.name
+		player.stat()
+
+	batting_list = sorted(player_map.values(), key=attrgetter("avg"), reverse=True)
 
 	context = {'years': years, 'months': months, 'leagues': leagues, 'selected_year': selected_year, 'selected_month': selected_month, 'selected_league': selected_league, 'batting_list': batting_list}
 
@@ -358,7 +384,55 @@ def show_all_batting(request):
 
 def show_all_pitching(request, order="win"):
 	
-	return redirect("/")
+	game_all = Game.objects.all().order_by("date")
+	# calculate years
+	y1 = int(game_all[0].date.year)
+	y2 = int(game_all[len(game_all)-1].date.year)
+	years = [y for y in range(y1, y2+1)]
+	
+	months = range(1, 13)
+	leagues = League.objects.all()
+	
+	
+	selected_year  	= 0
+	selected_month 	= 0
+	selected_league	= 0
+	
+	if request.method == "POST":
+		selected_year  	= int(request.POST.get("selected-year"))
+		selected_month 	= int(request.POST.get("selected-month"))
+		selected_league	= int(request.POST.get("selected-league"))
+
+	pitching_all = Pitching.objects.all()
+	if( selected_year != 0 ):
+		pitching_all  = pitching_all.filter(game__date__year = selected_year)
+	if( selected_month != 0 ):
+		pitching_all  = pitching_all.filter(game__date__month = selected_month)
+	if( selected_league != 0 ):
+		pitching_all  = pitching_all.filter(game__league__id = selected_league)
+
+	##### calculate rank
+	player_map = {}
+	for pitching in pitching_all:
+		player = statPitching()
+		player.copy(pitching)
+		
+		id = pitching.member.id
+		
+		if( not player_map.has_key(id) ):
+			player_map[id] = player
+		else:
+			player_map[id].add(player)
+		
+	for player in player_map.values():
+		print player.member.name
+		player.stat()
+
+	pitching_list = sorted(player_map.values(), key=attrgetter("win"), reverse=True)
+
+	context = {'years': years, 'months': months, 'leagues': leagues, 'selected_year': selected_year, 'selected_month': selected_month, 'selected_league': selected_league, 'pitching_list': pitching_list}
+
+	return render(request, 'team/show_all_pitching.html', context)
 
 
 def login_view(request):
@@ -442,7 +516,24 @@ def add_game(request):
 					message = 'Add new league: %s' %league_name
 
 			league_list = League.objects.all()
-	
+		
+		if 'add-new-member-btn' in request.POST:
+			print ("add new member!")
+			member_name = request.POST["new-member-name"]
+			member_number = int(request.POST["new-member-number"])
+
+			if member_name != None:
+
+				member = Member.objects.filter(name = member_name)
+				if( member.exists() ):
+					warning = "Member %s already exists." %member_name
+				else:
+					member = Member(name=member_name, number=member_number)
+					member.save()
+					message = 'Add new member: %s(%d)' %(member_name, member_number)
+
+			member_list = Member.objects.all()
+
 		
 		if ('preview-btn' in request.POST) or ('save-game-btn' in request.POST):
 
@@ -478,6 +569,9 @@ def add_game(request):
 				else:
 					team = game_record.home
 					team.pitchers[0].RUN = game_record.away.R
+
+				###### use self-team innings as pitching innings
+				team.pitchers[0].OUT = team.col2inn[-1]*3
 
 				# create and save new Batting object
 				nBatter = len(team.batters)
@@ -662,6 +756,39 @@ def edit_game(request, game_id):
 		game_record = None
 		team = None
 		
+		if 'add-new-league-btn' in request.POST:
+			print ("add new league!")
+			league_name = request.POST["new-league-name"]
+
+			if league_name != None:
+
+				league = League.objects.filter(name = league_name)
+				if( league.exists() ):
+					warning = "League name %s already exists." %league_name
+				else:
+					league = League(name=league_name)
+					league.save()
+					message = 'Add new league: %s' %league_name
+
+			league_list = League.objects.all()
+		
+		if 'add-new-member-btn' in request.POST:
+			print ("add new member!")
+			member_name = request.POST["new-member-name"]
+			member_number = int(request.POST["new-member-number"])
+
+			if member_name != None:
+
+				member = Member.objects.filter(name = member_name)
+				if( member.exists() ):
+					warning = "Member %s already exists." %member_name
+				else:
+					member = Member(name=member_name, number=member_number)
+					member.save()
+					message = 'Add new member: %s(%d)' %(member_name, member_number)
+
+			member_list = Member.objects.all()
+
 		if ('preview-btn' in request.POST) or ('save-game-btn' in request.POST):
 
 			game.league	 = League.objects.get(id=league_id)
@@ -692,9 +819,15 @@ def edit_game(request, game_id):
 
 				if( away_name.upper() == 'RB' ):
 					team = game_record.away
+					team.pitchers[0].RUN = game_record.home.R
 				else:
 					team = game_record.home
+					team.pitchers[0].RUN = game_record.away.R
 				
+				###### use self-team innings as pitching innings
+				team.pitchers[0].OUT = team.col2inn[-1]*3
+
+
 				batting_list = []
 				for batter in team.batters:
 					batting = Batting()

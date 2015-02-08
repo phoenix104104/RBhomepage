@@ -1,6 +1,6 @@
 {% extends "basic.html" %}
 {% block title %}
-	{{thisteam.name}}球隊成員
+	球隊成員
 {% endblock title %}
 
 {% block navbar %}
@@ -14,221 +14,53 @@
 
 {% block content %}
 
-	<div class="container">
+<div class="container">
 
-		<h3 class="title">{{team_info.name}}</h3>
-
-		<div class="col-md-6 col-md-offset-3">	
+	<div class="row">
+		<div class="col-md-4 col-md-offset-4">	
 			<table class="table table-hover table-bordered fixed-width table-condensed">
 				<thead>
 					<tr>
-						<th>年度</th>
-						<th>已賽</th>
-						<th>勝</th>
-						<th>負</th>
-						<th>和</th>
-						<th>勝率</th>
+						<th>職務</th>
+						<th>姓名</th>
+						<th>背號</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>2014</td>
-						<td>{{team_info.game_played}}</td>
-						<td>{{team_info.win}}</td>
-						<td>{{team_info.lose}}</td>
-						<td>{{team_info.tie}}</td>
-						<td>{{team_info.percent}}</td>
-						</tr>
+						<td>隊長</td>
+						<td><a href="/member/{{captain.id}}">{{captain.name}}</a></td>
+						<td>{{captain.number}}</td>
+					</tr>
+					<tr>
+						<td>教練</td>
+						<td><a href="/member/{{coach.id}}">{{coach.name}}</a></td>
+						<td>{{coach.number}}</td>
+					</tr>
+					<tr>
+						<td>董事</td>
+						<td><a href="/member/{{chairman.id}}">{{chairman.name}}</a></td>
+						<td>{{chairman.number}}</td>
+					</tr>
+					<tr>
+						<td>預財</td>
+						<td><a href="/member/{{finance.id}}">{{finance.name}}</a></td>
+						<td>{{finance.number}}</td>
+					</tr>
+					{% for member in member_list %}
+					<tr>
+						<td>{{member.title}}</td>
+						<td><a href="/member/{{member.id}}">{{member.name}}</a></td>
+						<td>{{member.number}}</td>
+					</tr>
+					{% endfor %}
 				</tbody>
 			</table>
 		</div>
-
-		<br>
-		
-		<div class="col-md-6 col-md-offset-3">
-			<table class="table table-hover table-bordered fixed-width table-condensed">
-				<thead>
-					<tr>
-						<th colspan="5" class="table-title">逐場戰績</th>
-					</tr>
-					<tr>
-						<th>日期</th>
-						<th>地點</th>
-						<th>對手</th>
-						<th>比分</th>
-						<th>勝敗</th>
-					</tr>
-				</thead>
-				<tbody>
-				{% for game in game_list %}
-					<tr>
-						<td><a href="/game/{{game.gameID}}">{{game.date}}</a></td>
-						<td>{{game.location}}</td>
-						<td><a href="/team/{{game.opp.teamID}}">{{game.opp.name}}</a></td>
-						<td>{{game.scores}}</td>
-						<td>{{game.result}}</td>
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		</div>
-
-		<table class="table table-hover table-bordered">
-			<thead>
-				<tr>
-					<th colspan="18" class="table-title">打擊成績</th>
-				</tr>
-				<tr>
-					<th>名字</th>
-					<th>出賽</th>
-					<th>打席</th>
-					<th>打數</th>
-					<th>安打</th>
-					<th>一安</th>
-					<th>二安</th>
-					<th>三安</th>
-					<th>全壘打</th>
-					<th>打點</th>
-					<th>得分</th>
-					<th>保送</th>
-					<th>三振</th>
-					<th>犧牲</th>
-					<th>打擊率</th>
-					<th>上壘率</th>
-					<th>長打率</th>
-					<th>攻擊指數</th>
-				</tr>
-			</thead>
-			<tbody>
-			{% for bat in members_bat %}
-				<tr>
-					<td><a href="/people/{{bat.id}}">{{bat.name}}</a></td>
-					<td>{{bat.games_played}}</td>
-					<td>{{bat.pa}}</td>
-					<td>{{bat.ab}}</td>
-					<td>{{bat.hit}}</td>
-					<td>{{bat.single}}</td>
-					<td>{{bat.double}}</td>
-					<td>{{bat.triple}}</td>
-					<td>{{bat.hr}}</td>
-					<td>{{bat.rbi}}</td>
-					<td>{{bat.r}}</td>
-					<td>{{bat.bb}}</td>
-					<td>{{bat.so}}</td>
-					<td>{{bat.sf}}</td>
-					<td>{{bat.avg_s}}</td>
-					<td>{{bat.obp_s}}</td>
-					<td>{{bat.slg_s}}</td>
-					<td>{{bat.ops_s}}</td>
-						
-				</tr>
-			{% endfor %}
-				<tr class="success">
-					<td>總計</td>
-					<td>--</td>
-					<td>{{team_bat.pa}}</td>
-					<td>{{team_bat.ab}}</td>
-					<td>{{team_bat.hit}}</td>
-					<td>{{team_bat.single}}</td>
-					<td>{{team_bat.double}}</td>
-					<td>{{team_bat.triple}}</td>
-					<td>{{team_bat.hr}}</td>
-					<td>{{team_bat.rbi}}</td>
-					<td>{{team_bat.r}}</td>
-					<td>{{team_bat.bb}}</td>
-					<td>{{team_bat.so}}</td>
-					<td>{{team_bat.sf}}</td>
-					<td>{{team_bat.avg_s}}</td>
-					<td>{{team_bat.obp_s}}</td>
-					<td>{{team_bat.slg_s}}</td>
-					<td>{{team_bat.ops_s}}</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<table class="table table-hover table-bordered table-condensed" >
-			<thead>
-				<tr>
-					<th colspan="17" class="table-title">投球成績</th>
-				</tr>
-				<tr>
-					<th>名字</th>
-					<th>出賽</th>
-					<th>勝投</th>
-					<th>敗投</th>
-					<th>打席</th>
-					<th>局數</th>
-					<th>奪三振</th>
-					<th>保送</th>
-					<th>被安打</th>
-					<th>被全壘打</th>
-					<th>失分</th>
-					<th>責失分</th>
-					<th>滾地出局</th>
-					<th>飛球出局</th>
-					<th>保送/局數</th>
-					<th>自責分率</th>
-					<th>被上壘率</th>
-				</tr>
-			</thead>
-			<tbody>
-			{% for pit in members_pit %}
-				<tr>
-					<td><a href="/people/{{pit.id}}">{{pit.name}}</a></td>
-					<td>{{pit.games_played}}</td>
-					<td>{{pit.win}}</td>
-					<td>{{pit.lose}}</td>
-					<td>{{pit.pa}}</td>
-					<td>{{pit.inning}}</td>
-					<td>{{pit.so}}</td>
-					<td>{{pit.bb}}</td>
-					<td>{{pit.h}}</td>
-					<td>{{pit.hr}}</td>
-					<td>{{pit.r}}</td>
-					<td>{{pit.er}}</td>
-					<td>{{pit.go}}</td>
-					<td>{{pit.fo}}</td>
-					<td>{{pit.bb_inning_s}}</td>
-					<td>{{pit.era_s}}</td>
-					<td>{{pit.whip_s}}</td>
-				</tr>
-			{% endfor %}
-				<tr class="success">
-					<td>總計</td>
-					<td>--</td>
-					<td>{{team_pit.win}}</td>
-					<td>{{team_pit.lose}}</td>
-					<td>{{team_pit.pa}}</td>
-					<td>{{team_pit.inning}}</td>
-					<td>{{team_pit.so}}</td>
-					<td>{{team_pit.bb}}</td>
-					<td>{{team_pit.h}}</td>
-					<td>{{team_pit.hr}}</td>
-					<td>{{team_pit.r}}</td>
-					<td>{{team_pit.er}}</td>
-					<td>{{team_pit.go}}</td>
-					<td>{{team_pit.fo}}</td>
-					<td>{{team_pit.bb_inning_s}}</td>
-					<td>{{team_pit.era_s}}</td>
-					<td>{{team_pit.whip_s}}</td>
-				</tr>
-			</tbody>
-		</table>
 	</div>
 
-	
-{% endif %}
 
-    <div class="footer">
-        <div class="container">
-            <div class="row row-center">
-                <div class="fb-box col-center">
-    	            <div class="fb-like-box" data-href="https://www.facebook.com/NTUSBLeague" data-width="400" data-height="300" data-colorscheme="light" data-show-faces="true" data-header="true" data-stream="false" data-show-border="true"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+</div>
 
 {% endblock content %}
 

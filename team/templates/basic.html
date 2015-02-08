@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="{% static 'css/tablesorter_blue.css' %}" type="text/css">
 
 
-	<link rel="shortcut icon" href="{% static 'images/ntusbleague.jpg' %}">
+	<link rel="shortcut icon" href="{% static 'images/cover.jpg' %}">
 
 	<script src="http://code.jquery.com/jquery.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
@@ -125,16 +125,21 @@
 
 {% endblock "header" %}
 
-	<div class="main-body">
-		{% block content %}basic template{% endblock content %}
-	</div>
-    
     <!-- hidden warning -->
     <script type="text/javascript"> 
 	    var warning = "{{warning}}";
 	    var is_login = "{{user.is_authenticated}}"
 	</script>
-	<!--<input type="hidden" id="warning" value="{{warning}}" />-->
+
+	<div class="wrap">
+		<div class="main-body">
+			{% block content %}basic template{% endblock content %}
+		</div>
+    </div>
+	<footer class="footer">
+	    <div class="container">
+	    </div>
+	</footer>
 
 
 </body>
