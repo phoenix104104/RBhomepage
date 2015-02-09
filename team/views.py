@@ -12,7 +12,7 @@ from parse_record import parse_game_record
 from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray, IntegerArray_to_CommaSeparatedString, gather_team_scores_from_web, text_to_table, table_to_text, calculate_batting_rank
 
 
-def index(request, warning=None):
+def index(request, warning=""):
 	
 
 	context = {'warning': warning}

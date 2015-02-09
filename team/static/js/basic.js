@@ -47,7 +47,7 @@ $(document).ready(function() {
         }
     });
 
-    if( warning != "None" && is_login != "True" ){
+    if( warning != "" && is_login != "True" ){
         $('#login-modal').modal('show');
     }
 
@@ -93,16 +93,7 @@ $(document).ready(function() {
     
 
 
-// google-map API
-function initialize() {
-  var mapProp = {
-    center:new google.maps.LatLng(25.068230, 121.569206),
-    zoom:15,
-    mapTypeId:google.maps.MapTypeId.ROADMAP
-  };
-  var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-}
-google.maps.event.addDomListener(window, 'load', initialize);
+
 });
 
 

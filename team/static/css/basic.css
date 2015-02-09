@@ -142,3 +142,14 @@ table{
     display: inline-block;
     vertical-align: middle;
 }
+
+.map{
+    text-align: center;
+    font-weight: bold;
+}
+
+#googleMap{
+    margin-top: 10px;
+    width: auto;
+    height: 400px;
+}
