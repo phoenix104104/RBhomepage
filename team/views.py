@@ -368,7 +368,6 @@ def show_all_batting(request):
 			player_map[id].add(player)
 		
 	for player in player_map.values():
-		print player.member.name
 		player.stat()
 
 	batting_list = sorted(player_map.values(), key=attrgetter("avg"), reverse=True)
@@ -420,7 +419,6 @@ def show_all_pitching(request, order="win"):
 			player_map[id].add(player)
 		
 	for player in player_map.values():
-		print player.member.name
 		player.stat()
 
 	pitching_list = sorted(player_map.values(), key=attrgetter("win"), reverse=True)

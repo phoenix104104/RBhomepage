@@ -91,8 +91,9 @@ $(document).ready(function() {
     $("#all_batting_table").tablesorter();
     $("#all_pitching_table").tablesorter();
     
-
-
+    $('.carousel').carousel({
+        interval: 500
+    });
 
 });
 

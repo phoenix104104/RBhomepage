@@ -103,6 +103,7 @@ class statBatting():
 	slg  	= 0.0
 	obp  	= 0.0
 	ops  	= 0.0
+	ssa 	= 0
 
 	avg_s	= ''
 	slg_s	= ''
@@ -121,6 +122,8 @@ class statBatting():
 		if self.pa != 0: 
 			self.obp = (self.hit + self.bb) / float(self.pa)
 			self.ops = self.obp + self.slg 
+
+		self.ssa = int(self.avg*1000) + self.hr * 20 + self.rbi * 5 + bases
 
 		# map to fix-decimal string
 		self.avg_s = format(self.avg, '.3f')
