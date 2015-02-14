@@ -92,7 +92,7 @@ $(document).ready(function() {
     $("#all_pitching_table").tablesorter();
     
     $('.carousel').carousel({
-        interval: 500
+        interval: 2000
     });
 
 });

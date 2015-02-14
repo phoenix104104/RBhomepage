@@ -93,7 +93,7 @@ table{
 
 .footer {
 	position: relative;
-  	width: 100%;
+  width: 100%;
 	/* Set the fixed height of the footer here */
 	margin-top: -100px;
 	height: 100px;
@@ -112,36 +112,6 @@ table{
 }
 
 
-/* carousel */
-.carousel {
-	height: auto;
-	max-height: 100%;
-}
-
-.item,
-.active,
-.carousel-inner {
-	height: 100%;
-    text-align: center;
-}
-
-/* Background images are set within the HTML using inline CSS, not here */
-
-.fill {
-    width: 100%;
-    height: 100%;
-    background-position: center;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-    -o-background-size: cover;
-}
-
-.carousel-caption {
-    line-height: normal; 
-    display: inline-block;
-    vertical-align: middle;
-}
 
 
 #googleMap{
@@ -154,6 +124,28 @@ table{
 	text-align: center;
 }
 
+.carousel, .item, .active{
+  height:100%;
+}
+
+.carousel-inner{
+  height:100%;
+}
+
+.fill{
+  width:100%;
+  height:100%;
+  background-position:center;
+  background-size:cover;
+}
+
+/* keep full widget on smaller screens */
+@media (max-width: 767px) { 
+  body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 
 
 .carousel-fade .carousel-inner .item {
