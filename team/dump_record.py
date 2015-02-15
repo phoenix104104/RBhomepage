@@ -89,7 +89,7 @@ def make_batter_table(team):
     table = []
 
     # --- inning title
-    offset = 2
+    offset = 3
     max_width = offset + len(col2inn)
     row = [""] * max_width
 
@@ -117,12 +117,13 @@ def make_batter_table(team):
             name = player[n].name
 
         row[1] = name
+        row[2] = player[n].pos
 
         for i in range(len(player[n].PAs) ):
             pa = player[n].PAs[i]
             if( pa.isPlay ):
                 word, word_len = PA2Character(pa)
-                row[pa.column+2] = "%s" %word
+                row[pa.column+offset] = "%s" %word
 
         table.append(row)
 

@@ -104,7 +104,7 @@ class statBatting():
 	obp  	= 0.0
 	ops  	= 0.0
 	ssa 	= 0
-
+	field 	= ''
 	avg_s	= ''
 	slg_s	= ''
 	obp_s	= ''
@@ -145,6 +145,7 @@ class statBatting():
 		self.bb     = batting.bb
 		self.k      = batting.k
 		self.sf     = batting.sf
+		self.field 	= batting.field
 		self.gp 	= 1
 
 	# accumulate statistic

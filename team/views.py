@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from models import League, Member, Game, Batting, Pitching
+from models import League, Member, Game, Batting, Pitching, Current
 import mimetypes, os
 from operator import attrgetter
 from django.core.servers.basehttp import FileWrapper
@@ -31,7 +31,7 @@ def show_all_game(request):
 	months = range(1, 13)
 	leagues = League.objects.all()
 	
-	selected_year  	= 0
+	selected_year  	= Current.objects.all()[0].year
 	selected_month 	= 0
 	selected_league	= 0
 	
@@ -157,7 +157,7 @@ def show_member(request, member_id):
 	
 
 	########## per game log ##########
-	log_selected_year  	= 0
+	log_selected_year  	= Current.objects.all()[0].year
 	log_selected_month 	= 0
 	log_selected_league	= 0
 
@@ -361,7 +361,7 @@ def show_all_batting(request):
 	leagues = League.objects.all()
 	
 	
-	selected_year  	= 0
+	selected_year  	= Current.objects.all()[0].year
 	selected_month 	= 0
 	selected_league	= 0
 	
@@ -413,7 +413,7 @@ def show_all_pitching(request, order="win"):
 	leagues = League.objects.all()
 	
 	
-	selected_year  	= 0
+	selected_year  	= Current.objects.all()[0].year
 	selected_month 	= 0
 	selected_league	= 0
 	

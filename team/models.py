@@ -81,3 +81,9 @@ class Pitching(models.Model):
 	
 	def __unicode__(self):
 		return self.member.name + ' ' + str(self.game.date) + ' ' + self.game.home_name + ' vs ' + self.game.away_name
+
+class Current(models.Model):
+	year = models.IntegerField(default=0)
+
+	def __unicode__(self):
+		return "%d" %self.year
