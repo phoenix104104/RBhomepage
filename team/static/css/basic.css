@@ -102,10 +102,11 @@ table{
 }
 
 .footer > .container {
-  padding-top: 50px;
+  padding-top: 40px;
   padding-right: 30px;
   padding-left: 30px;
 }
+
 .form-horizontal{
 	border-style: bold !important;
 	border-width: 10px !important;
@@ -194,3 +195,6 @@ table{
               transform: translate3d(0, 0, 0);
     }
 }
+
+.navbar-fixed-top { background-color: rgba(45,45,45,1);transition: background-color 2s ease 0s;}
+.navbar-fixed-top.opaque { background-color: rgba(45,45,45,0.75);transition: background-color 2s ease 0s;
