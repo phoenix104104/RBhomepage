@@ -179,10 +179,12 @@ class statPitching():
 	fo      = 0
 	win     = 0
 	lose    = 0
+	ra    	= 0
 	era    	= 0
 	whip   	= 0
 	IP  	= '0.0'
 	wl 		= ''
+	ra_s  	= '0.00'
 	era_s  	= '0.00'
 	whip_s 	= '0.00'
 
@@ -190,12 +192,11 @@ class statPitching():
 		self.inning = 0.1 * (self.outs % 3) + math.floor(self.outs / 3)
 		if self.inning !=0 :
 			self.era  = ( self.er / (self.outs / 3.0) ) * 7.0
+			self.ra   = ( self.run / (self.outs / 3.0) ) * 7.0
 			self.whip = ( self.hit + self.bb ) / ( self.outs / 3.0 )
-		else :
-			self.era  = 99
-			self.whip = 99
 
 		# map to fix-decimal string
+		self.ra_s        = format(self.ra, '.3f')
 		self.era_s       = format(self.era, '.3f')
 		self.whip_s      = format(self.whip, '.3f')
 

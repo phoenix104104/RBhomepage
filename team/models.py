@@ -5,7 +5,7 @@ class Member(models.Model):
 	id 		= models.AutoField(primary_key=True)
 	name 	= models.CharField(max_length=100, default="")
 	number  = models.IntegerField(default=0)
-	title   = models.CharField(max_length=100, default="")
+	title   = models.CharField(max_length=100, default="", blank=True)
 	
 	def __unicode__(self):
 		return "%s(%d)" %(self.name, self.number)

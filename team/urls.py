@@ -13,4 +13,5 @@ urlpatterns = [
 	url(r'^editgame/(?P<game_id>\d+)/$',views.edit_game,		name='edit_game'),
 	url(r'^batting/$',					views.show_all_batting, name='show_all_batting'),
     url(r'^pitching/$',					views.show_all_pitching,name='show_all_pitching'),
+    url(r'^passwd/$','django.contrib.auth.views.password_change', {'post_change_redirect' : '/'}, name="password_change"),
 ]

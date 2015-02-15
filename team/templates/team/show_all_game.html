@@ -16,38 +16,86 @@
 {% block content %}
 <div class="container">
 	
-	<div class="row">
-		<div class="col-md-10 col-md-offset-1">
-			<table class="table table-hover table-bordered fixed-width table-condensed">
-				<thead>
-					<tr>
-						<th colspan="6" class="table-title">已賽賽程</th>
-					</tr>
-					<tr>
-						<th>日期</th>
-						<th>地點</th>
-						<th>聯賽</th>
-						<th>客隊</th>
-						<th>主隊</th>
-						<th>比分</th>
-					</tr>
-				</thead>
-				<tbody>
-				{% for game in game_list %}
-					<tr>
-						<td><a href="/game/{{game.id}}">{{game.date}}</a></td>
-						<td>{{game.location}}</td>
-						<td>{{game.league}}</td>
-						<td>{{game.away_name}}</td>
-						<td>{{game.home_name}}</td>
-						<td>{{game.scores}}</td>
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
+	<form action="{% url 'show_all_game' %}" method = "post">
+		{% csrf_token %}
+
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<span class="btn-group">
+					<select class="form-control" name="selected-year" onchange="submit_options(this)">
+						<option value=0>Year</option>
+					  	{% for year in years %}
+					  		{% if year == selected_year %}
+								<option selected>{{year}}</option>
+					  		{% else %}
+					  			<option>{{year}}</option>
+					  		{% endif %}
+					    {% endfor %}
+					</select>
+				</span>
+
+				<span class="btn-group">
+					<select class="form-control" name="selected-month" onchange="submit_options(this)">
+						<option value=0>Month</option>
+					  	{% for month in months %}
+					  		{% if month == selected_month %}
+								<option value={{month}} selected>{{month}}月</option>
+					  		{% else %}
+					  			<option value={{month}}>{{month}}月</option>
+					  		{% endif %}
+							
+					    {% endfor %}
+					</select>
+				</span>
+
+				<span class="btn-group">
+					<select class="form-control" name="selected-league" onchange="submit_options(this)">
+						<option value=0>Game</option>
+					  	{% for league in leagues %}
+					  		{% if league.id == selected_league %}
+								<option value={{league.id}} selected>{{league.name}}</option>
+					  		{% else %}
+					  			<option value={{league.id}}>{{league.name}}</option>
+					  		{% endif %}
+							
+					    {% endfor %}
+					</select>
+				</span>	
+			</div>
 		</div>
-	</div>
+		
+		<br>
+		
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<table class="table table-hover table-bordered fixed-width table-condensed">
+					<thead>
+						<tr>
+							<th>日期</th>
+							<th>地點</th>
+							<th>聯賽</th>
+							<th>客隊</th>
+							<th>主隊</th>
+							<th>比分</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% for game in game_list %}
+						<tr>
+							<td><a href="/game/{{game.id}}">{{game.date}}</a></td>
+							<td>{{game.location}}</td>
+							<td>{{game.league}}</td>
+							<td>{{game.away_name}}</td>
+							<td>{{game.home_name}}</td>
+							<td>{{game.scores}}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
 	
+	</form>
 </div>
 
 {% endblock content %}

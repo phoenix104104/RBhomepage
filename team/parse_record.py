@@ -48,13 +48,13 @@ def parse_base(pa, str):
     return pa, err
 
 def change_pitcher(pa_strs):
-    if( pa_strs[0][0] == 'P' ):
+    if( pa_strs[0][0].upper() == 'P' ):
         return True
     else:
         return False
 
 def change_batter(pa_strs):
-    if( pa_strs[0][0] == 'R' and len(pa_strs[0]) != 1 ): # s[0] = 'R + no', not only 'R'(Right)
+    if( pa_strs[0][0].upper() == 'R' and len(pa_strs[0]) != 1 ): # s[0] = 'R + no', not only 'R'(Right)
         return True
     else:
         return False
@@ -63,7 +63,7 @@ def change_batter(pa_strs):
 def parse_PA(team, order, turn, inning, curr_order):
     
     err = ""
-    pa_str = team.order_table[order][turn].upper()
+    pa_str = team.order_table[order][turn]
     s = pa_str.split('/')
     
     pa = PA()
@@ -72,20 +72,20 @@ def parse_PA(team, order, turn, inning, curr_order):
     batter = curr_order[order] # pointer to current batter
     
 
-    if( s[0] == 'NP' ): # no play
+    if( s[0].upper() == 'NP' ): # no play
         pa.isPlay = False
-        pa.result = s[0]
+        pa.result = s[0].upper()
     else:
         pa.isPlay = True
         while( change_pitcher(s) or change_batter(s) ):
 
             if( change_pitcher(s) ):
-                name = s[0][1:].upper()
+                name = s[0][1:]
                 pa.change_pitcher = name
                 s = s[1:]
 
             if( change_batter(s)  ):  # change batter
-                name = s[0][1:].upper()
+                name = s[0][1:]
                 idx = team.batters.index(batter) # current batter index
 
                 batter = team.find_batter(name)
@@ -96,12 +96,14 @@ def parse_PA(team, order, turn, inning, curr_order):
                 curr_order[order] = batter
                 s = s[1:]
 
+        s = [t.upper() for t in s]
+
         if( len(s) == 1 ):      # result
             pa.result = s[0]
 
         elif( len(s) == 2 ):
 
-            if( s[0].isdigit() or (s[0] in ['L', 'R', 'C']) ):   # pos-res
+            if( s[0].isdigit() or (s[0] in ['L', 'R', 'C', 'l', 'r', 'c']) ):   # pos-res
                 pa.pos    = s[0]
                 pa.result = s[1]
 

@@ -21,12 +21,36 @@ def index(request, warning=""):
 
 def show_all_game(request):
 
-	game_list = Game.objects.all().order_by('-date')
+	game_list = Game.objects.all().order_by('date')
+	
+	# calculate years
+	y1 = int(game_list[0].date.year)
+	y2 = int(game_list[len(game_list)-1].date.year)
+	years = [y for y in range(y1, y2+1)]
+	
+	months = range(1, 13)
+	leagues = League.objects.all()
+	
+	selected_year  	= 0
+	selected_month 	= 0
+	selected_league	= 0
+	
+	if request.method == "POST":
+		selected_year  	= int(request.POST.get("selected-year"))
+		selected_month 	= int(request.POST.get("selected-month"))
+		selected_league	= int(request.POST.get("selected-league"))
+
+	if( selected_year != 0 ):
+		game_list = game_list.filter(date__year = selected_year)
+	if( selected_month != 0 ):
+		game_list = game_list.filter(date__month = selected_month)
+	if( selected_league != 0 ):
+		game_list = game_list.filter(league__id = selected_league)
 
 	for game in game_list:
 		game.scores = str(game.away_R) + ' : ' + str(game.home_R)
 
-	context = {'game_list': game_list}
+	context = {'years': years, 'months': months, 'leagues': leagues, 'selected_year': selected_year, 'selected_month': selected_month, 'selected_league': selected_league, 'game_list': game_list}
 	return render(request, 'team/show_all_game.html', context)
 
 
@@ -203,6 +227,7 @@ def show_member(request, member_id):
 			pitching_sum.stat()
 
 			# accumulated statistic
+			player.ra_s   = pitching_sum.ra_s
 			player.era_s  = pitching_sum.era_s
 			player.whip_s = pitching_sum.whip_s
 			
@@ -559,9 +584,17 @@ def add_game(request):
 				if( away_name.upper() == 'RB' ):
 					team = game_record.away
 					team.pitchers[0].RUN = game_record.home.R
+					if( game_record.away.R > game_record.home.R ):
+						team.pitchers[0].WIN = 1;
+					elif( game_record.away.R < game_record.home.R ):
+						team.pitchers[0].LOSE = 1;
 				else:
 					team = game_record.home
 					team.pitchers[0].RUN = game_record.away.R
+					if( game_record.home.R > game_record.away.R ):
+						team.pitchers[0].WIN = 1;
+					elif( game_record.home.R < game_record.away.R ):
+						team.pitchers[0].LOSE = 1;
 
 				###### use self-team innings as pitching innings
 				team.pitchers[0].OUT = team.col2inn[-1]*3
@@ -585,10 +618,15 @@ def add_game(request):
 					batting.k     	= team.batters[i].K
 					batting.sf    	= team.batters[i].SF
 					batting.field 	= team.batters[i].pos
-					batting.member  = Member.objects.get(name=team.batters[i].name.decode('utf8'))
+					try:
+						batting.member  = Member.objects.get(name=team.batters[i].name.decode('utf8'))
+					except Member.DoesNotExist:
+						warning = "member name %s does not exist." %team.batters[i].name
+						break
 
 					batting_list.append(batting)
-					
+				
+
 				# create and save new Batting object
 				nPitcher = len(team.pitchers)
 				pitching_list = []
@@ -609,14 +647,18 @@ def add_game(request):
 					pitching.fo    	= team.pitchers[i].FO
 					pitching.win   	= team.pitchers[i].WIN
 					pitching.lose  	= team.pitchers[i].LOSE
-					pitching.member = Member.objects.get(name=team.pitchers[i].name.decode('utf8'))
+					try:
+						pitching.member = Member.objects.get(name=team.pitchers[i].name.decode('utf8'))
+					except Member.DoesNotExist:
+						warning = "member name %s does not exist." %team.pitchers[i].name
+						break
+
 					pitching_list.append(pitching)
 
 				# add rows for changing pitchers
 				N = len(pitching_list)
 				for i in range(5 - N):
 					pitching_list.append(Pitching())
-
 
 				if 'save-game-btn' in request.POST:
 					
