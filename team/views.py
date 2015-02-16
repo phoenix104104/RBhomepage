@@ -8,7 +8,7 @@ from models import League, Member, Game, Batting, Pitching, Current
 import mimetypes, os
 from operator import attrgetter
 from django.core.servers.basehttp import FileWrapper
-from parse_record import parse_game_record
+from parse_record import parse_game_record, extract_single_team_data
 from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray, IntegerArray_to_CommaSeparatedString, gather_team_scores_from_web, text_to_table, table_to_text, calculate_batting_rank
 
 
@@ -75,10 +75,7 @@ def show_game(request, game_id) :
 	game_record, warning = parse_game_record(away_name, game.away_scores, away_table, \
 	           	             	         	 home_name, game.home_scores, home_table)
 
-	if( away_name.upper() == 'RB' ):
-		team = game_record.away
-	else:
-		team = game_record.home
+	game_record, team = extract_single_team_data(game_record, 'RB')
 
 	if request.method != "POST":
 		
@@ -581,23 +578,7 @@ def add_game(request):
 			if( warning == "" ):
 				message = "Preview record table!"
 
-				if( away_name.upper() == 'RB' ):
-					team = game_record.away
-					team.pitchers[0].RUN = game_record.home.R
-					if( game_record.away.R > game_record.home.R ):
-						team.pitchers[0].WIN = 1;
-					elif( game_record.away.R < game_record.home.R ):
-						team.pitchers[0].LOSE = 1;
-				else:
-					team = game_record.home
-					team.pitchers[0].RUN = game_record.away.R
-					if( game_record.home.R > game_record.away.R ):
-						team.pitchers[0].WIN = 1;
-					elif( game_record.home.R < game_record.away.R ):
-						team.pitchers[0].LOSE = 1;
-
-				###### use self-team innings as pitching innings
-				team.pitchers[0].OUT = team.col2inn[-1]*3
+				game_record, team = extract_single_team_data(game_record, 'RB')
 
 				# create and save new Batting object
 				nBatter = len(team.batters)
@@ -852,15 +833,7 @@ def edit_game(request, game_id):
 			if( warning == "" ):
 				message = "Preview record table!"
 
-				if( away_name.upper() == 'RB' ):
-					team = game_record.away
-					team.pitchers[0].RUN = game_record.home.R
-				else:
-					team = game_record.home
-					team.pitchers[0].RUN = game_record.away.R
-				
-				###### use self-team innings as pitching innings
-				team.pitchers[0].OUT = team.col2inn[-1]*3
+				game_record, team = extract_single_team_data(game_record, 'RB')
 
 
 				batting_list = []

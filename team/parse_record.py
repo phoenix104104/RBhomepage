@@ -6,6 +6,47 @@ import argparse
 from record_player import Game, Team, rdBatter, rdPitcher, PA
 from dump_record import make_PTT_format, make_database_format, make_web_table
 
+def extract_single_team_data(game, team_name):
+    
+    if( game.away.name == team_name ):
+        game.away.pitchers[0].RUN = game.home.R
+        if( game.away.R > game.home.R ):
+            game.away.pitchers[0].WIN = 1;
+        elif( game.away.R < game.home.R ):
+            game.away.pitchers[0].LOSE = 1;
+
+        ###### use self-team innings as pitching innings (not exactly correct)
+        game.away.pitchers[0].OUT = game.away.col2inn[-1]*3
+        team = game.away
+        
+    else:
+        game.home.pitchers[0].RUN = game.away.R
+        if( game.home.R > game.away.R ):
+            game.home.pitchers[0].WIN = 1;
+        elif( game.home.R < game.away.R ):
+            game.home.pitchers[0].LOSE = 1;
+
+        ###### use self-team innings as pitching innings (not exactly correct)
+        game.home.pitchers[0].OUT = game.home.col2inn[-1]*3
+        team = game.home
+    
+    # re-write web/PTT table
+    if( game.away.hasRecord() ):
+        game.away.compute_statistic()
+        make_web_table(game.away)
+    if( game.home.hasRecord() ):
+        game.home.compute_statistic()
+        make_web_table(game.home)
+
+    isColor = True
+    post_ptt = make_PTT_format(game, isColor)
+    post_ptt = post_ptt.replace('\x1b', '\025')
+    game.post_ptt = post_ptt
+    game.post_db  = make_database_format(game)
+
+    return game, team
+
+
 def check_least_out(pa):
     out = 0
     one_out = ["G", "F", "K", "SF", "IF", "CB", "IB", "FO", "DO"]
@@ -467,7 +508,6 @@ def parse_game_record(away_team_name, away_scores, away_table, home_team_name, h
     post_ptt = make_PTT_format(game, isColor)
     post_ptt = post_ptt.replace('\x1b', '\025')
     game.post_ptt = post_ptt
-
     game.post_db  = make_database_format(game)
     
     return game, err
