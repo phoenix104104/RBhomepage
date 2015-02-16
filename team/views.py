@@ -14,12 +14,15 @@ from util import statBatting, statPitching, CommaSeparatedString_to_IntegerArray
 
 def index(request, warning=""):
 	
-
 	context = {'warning': warning}
 	return render(request, 'team/index.html', context)
 
 
 def show_all_game(request):
+
+	if not request.user.is_authenticated():
+		print "user not login!"
+		return render(request, 'team/show_all_game.html') 
 
 	game_list = Game.objects.all().order_by('date')
 	
@@ -55,6 +58,10 @@ def show_all_game(request):
 
 
 def show_game(request, game_id) :
+
+	if not request.user.is_authenticated():
+		print "user not login!"
+		return render(request, 'team/show_game.html') 
 
 	game = Game.objects.get(id = game_id)
 	
@@ -129,6 +136,10 @@ def show_game(request, game_id) :
 
 def show_all_member(request):
 
+	if not request.user.is_authenticated():
+		print "user not login!"
+		return render(request, 'team/show_all_member.html') 
+
 	member_list = Member.objects.filter(title = '')
 	captain  = Member.objects.get(title = '隊長')
 	coach 	 = Member.objects.get(title = '教練')
@@ -140,6 +151,10 @@ def show_all_member(request):
 	return render(request, 'team/show_all_member.html', context)
 
 def show_member(request, member_id):
+
+	if not request.user.is_authenticated():
+		print "user not login!"
+		return render(request, 'team/show_member.html') 
 
 	member = Member.objects.get(id = member_id)
 	game_all = Game.objects.all().order_by("date")
@@ -348,6 +363,10 @@ def show_member(request, member_id):
   
 def show_all_batting(request):
 
+	if not request.user.is_authenticated():
+		print "user not login!"
+		return render(request, 'team/show_all_batting.html') 
+
 	game_all = Game.objects.all().order_by("date")
 	# calculate years
 	y1 = int(game_all[0].date.year)
@@ -400,6 +419,10 @@ def show_all_batting(request):
 
 def show_all_pitching(request, order="win"):
 	
+	if not request.user.is_authenticated():
+		print "user not login!"
+		return render(request, 'team/show_all_pitching.html') 
+
 	game_all = Game.objects.all().order_by("date")
 	# calculate years
 	y1 = int(game_all[0].date.year)

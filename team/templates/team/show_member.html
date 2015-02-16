@@ -13,7 +13,7 @@
 {% endblock navbar %}
 
 {% block content %}
-
+{% if user.is_authenticated %}
 <div class="container">
 	<h4><b>{{member.name}}</b></h4>
 	<br>
@@ -356,5 +356,5 @@
 </div>
 
 
-
+{% endif %}
 {% endblock content %}

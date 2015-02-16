@@ -1,5 +1,4 @@
 {% extends "basic.html" %}
-
 {% block title %}
 	賽程
 {% endblock title %}
@@ -14,6 +13,7 @@
 {% endblock navbar %}
 
 {% block content %}
+{% if user.is_authenticated %}
 <div class="container">
 	
 	<form action="{% url 'show_all_game' %}" method = "post">
@@ -98,4 +98,5 @@
 	</form>
 </div>
 
+{% endif %}
 {% endblock content %}

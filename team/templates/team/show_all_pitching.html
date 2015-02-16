@@ -13,7 +13,7 @@
 {% endblock navbar %}
 
 {% block content %}
-{% if pitching_list %}
+{% if user.is_authenticated %}
 
 <div class="container">
 
@@ -120,6 +120,4 @@
 </div>
 	
 {% endif %}
-
-
 {% endblock content %}
