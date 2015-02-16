@@ -21,7 +21,6 @@ def index(request, warning=""):
 def show_all_game(request):
 
 	if not request.user.is_authenticated():
-		print "user not login!"
 		return render(request, 'team/show_all_game.html') 
 
 	game_list = Game.objects.all().order_by('date')
@@ -60,7 +59,6 @@ def show_all_game(request):
 def show_game(request, game_id) :
 
 	if not request.user.is_authenticated():
-		print "user not login!"
 		return render(request, 'team/show_game.html') 
 
 	game = Game.objects.get(id = game_id)
@@ -137,7 +135,6 @@ def show_game(request, game_id) :
 def show_all_member(request):
 
 	if not request.user.is_authenticated():
-		print "user not login!"
 		return render(request, 'team/show_all_member.html') 
 
 	member_list = Member.objects.filter(title = '')
@@ -153,7 +150,6 @@ def show_all_member(request):
 def show_member(request, member_id):
 
 	if not request.user.is_authenticated():
-		print "user not login!"
 		return render(request, 'team/show_member.html') 
 
 	member = Member.objects.get(id = member_id)
@@ -364,7 +360,6 @@ def show_member(request, member_id):
 def show_all_batting(request):
 
 	if not request.user.is_authenticated():
-		print "user not login!"
 		return render(request, 'team/show_all_batting.html') 
 
 	game_all = Game.objects.all().order_by("date")
@@ -420,7 +415,6 @@ def show_all_batting(request):
 def show_all_pitching(request, order="win"):
 	
 	if not request.user.is_authenticated():
-		print "user not login!"
 		return render(request, 'team/show_all_pitching.html') 
 
 	game_all = Game.objects.all().order_by("date")
@@ -484,6 +478,7 @@ def login_view(request):
 		if user is not None:
 			if user.is_active:
 				login(request, user)
+				print "user %s login!" %username
 				return redirect("/")
 			else:
 				return redirect("/")
