@@ -255,7 +255,7 @@ def pos2word(pos, res):
         else:
             word = "投"
     elif( pos == "2" ):
-        if( res == "1B" ):
+        if( res == "1B" or res == "G"):
             word = "內"
         else:
             word = "補"
