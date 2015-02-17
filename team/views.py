@@ -198,6 +198,7 @@ def show_member(request, member_id):
 			batting_sum.stat()
 
 			# accumulated statistic
+			player.ssa   = batting_sum.ssa
 			player.avg_s = batting_sum.avg_s
 			player.slg_s = batting_sum.slg_s
 			player.obp_s = batting_sum.obp_s
@@ -355,7 +356,135 @@ def show_member(request, member_id):
 
 	return render(request, 'team/show_member.html', context)
 
+def show_team(request):
 
+	if not request.user.is_authenticated():
+		return render(request, 'team/show_team.html') 
+
+	game_all = Game.objects.all().order_by("date")
+	
+	# calculate years
+	y1 = int(game_all[0].date.year)
+	y2 = int(game_all[len(game_all)-1].date.year)
+	years = [y for y in range(y1, y2+1)]
+	
+	months = range(1, 13)
+	leagues = League.objects.all()
+	
+
+	selected_year  	= 0
+	selected_league	= 0
+
+	if request.method == "POST":
+		selected_year  	= int(request.POST.get("selected-year"))
+		selected_league	= int(request.POST.get("selected-league"))
+	
+
+	batting_all  = Batting.objects.all()
+	pitching_all  = Pitching.objects.all()
+	
+	if( selected_year != 0 ):
+		batting_all  = batting_all.filter(game__date__year = selected_year)
+		pitching_all = pitching_all.filter(game__date__year = selected_year)
+		game_all 	 = game_all.filter(date__year = selected_year)
+
+	if( selected_league != 0 ):
+		batting_all  = batting_all.filter(game__league__id = selected_league)
+		pitching_all = pitching_all.filter(game__league__id = selected_league)
+		game_all  	 = game_all.filter(league__id = selected_league)
+	
+	# --- batting
+	batting_list = []
+
+	if batting_all.exists():
+
+		# calculate data per year
+		if( selected_year == 0 ):
+
+			for year in years:
+				batting_year = batting_all.filter(game__date__year = year)
+				game_year 	 = game_all.filter(date__year = year)
+				batting_sum  = statBatting()
+
+				for batting in batting_year:
+					player = statBatting()
+					player.copy(batting)
+					
+					batting_sum.add(player)
+				
+				batting_sum.stat()
+				batting_sum.year = year
+				batting_sum.gp = len(game_year)
+				batting_list.append(batting_sum)
+
+		# calculate data per month in selected year
+		else:
+			
+			for month in months:
+				batting_month = batting_all.filter(game__date__month = month)
+				game_month 	  = game_all.filter(date__month = month)
+				batting_sum   = statBatting()
+
+				for batting in batting_month:
+					player = statBatting()
+					player.copy(batting)
+					
+					batting_sum.add(player)
+
+				batting_sum.stat()
+				batting_sum.month = month
+				batting_sum.gp = len(game_month)
+				batting_list.append(batting_sum)
+
+
+	# --- pitching
+	
+	pitching_list = []
+	
+	if pitching_all.exists():
+
+		# calculate data per year
+		if( selected_year == 0 ):
+
+			for year in years:
+				pitching_year = pitching_all.filter(game__date__year = year)
+				game_year 	  = game_all.filter(date__year = year)
+				pitching_sum  = statPitching()
+
+				for pitching in pitching_year:
+					player = statPitching()
+					player.copy(pitching)
+					
+					pitching_sum.add(player)
+
+				pitching_sum.stat()
+				pitching_sum.year = year
+				pitching_sum.gp = len(game_year)
+				pitching_list.append(pitching_sum)
+
+		# calculate data per month in selected year
+		else:
+			
+			for month in months:
+				pitching_month = pitching_all.filter(game__date__month = month)
+				game_month 	   = game_all.filter(date__month = month)
+				pitching_sum   = statPitching()
+	
+				for pitching in pitching_month:
+					player = statPitching()
+					player.copy(pitching)
+					
+					pitching_sum.add(player)
+					
+				pitching_sum.stat()
+				pitching_sum.month = month
+				pitching_sum.gp = len(game_month)
+				pitching_list.append(pitching_sum)
+	
+
+	context = {'years': years, 'leagues': leagues, 'selected_year': selected_year, 'selected_league': selected_league, 'batting_list': batting_list, 'pitching_list': pitching_list}
+
+	return render(request, 'team/show_team.html', context)
   
 def show_all_batting(request):
 

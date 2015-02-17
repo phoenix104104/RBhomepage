@@ -39,7 +39,11 @@ class Game(models.Model):
 	record 			= models.TextField(default="")
 
 	def __unicode__(self):
-		return self.away_name + ' vs ' + self.home_name + '  ' + str(self.date)
+		return str(self.date) + ' ' + self.away_name + ' vs ' + self.home_name
+
+	class Meta:
+		ordering = ["date"]
+
 
 class Batting(models.Model):
 	game    = models.ForeignKey(Game)

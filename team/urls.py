@@ -7,6 +7,7 @@ urlpatterns = [
 	url(r'^logout$',					views.logout_view, 		name='logout_view'),
 	url(r'^game$',						views.show_all_game, 	name='show_all_game'),
 	url(r'^game/(?P<game_id>\d+)/$',	views.show_game,	 	name='show_game'),
+	url(r'^team$',						views.show_team,		name='show_team'),
 	url(r'^member/$',					views.show_all_member,	name='show_all_member'),
 	url(r'^member/(?P<member_id>\d+)/$',views.show_member, 		name='show_member'),
 	url(r'^addgame/$',					views.add_game,			name='add_game'),

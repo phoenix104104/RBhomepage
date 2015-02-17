@@ -114,12 +114,17 @@ table{
 }
 
 
-
+caption{
+  text-align: center;
+  font-weight: bold;
+  color: #101010;
+  font-size: 20px;
+}
 
 #googleMap{
     margin-top: 10px;
     width: auto;
-    height: 600px;
+    height: 300px;
 }
 
 .map{

@@ -7,6 +7,7 @@
 <ul class="nav navbar-nav">
     <li class="active"><a href="/member">成員</a></li>
     <li><a href="/game">戰績</a></li>
+    <li><a href="/team">團隊成績</a></li>
     <li><a href="/batting">打擊排行</a></li>
     <li><a href="/pitching">投手排行</a></li>
 </ul>
@@ -78,11 +79,9 @@
 						</span>
 							
 					
-						<table class="table table-hover table-bordered table-condensed">
+						<table class="table table-hover table-bordered table-condensed" id="log_batting_table">
+							<caption>打擊成績</caption>
 							<thead>
-								<tr>
-									<th colspan="20" class="table-title">打擊成績</th>
-								</tr>
 								<tr>
 									<th>日期</th>
 									<th>聯賽</th>
@@ -103,7 +102,6 @@
 									<th>上壘率</th>
 									<th>長打率</th>
 									<th>攻擊指數</th>
-									<th>銀棒指數</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -128,17 +126,14 @@
 									<td>{{batting.obp_s}}</td>
 									<td>{{batting.slg_s}}</td>
 									<td>{{batting.ops_s}}</td>
-									<td>{{batting.ssa}}</td>
 								</tr>
 							{% endfor %}
 							</tbody>
 						</table>			    	
 
-				    	<table class="table table-hover table-bordered table-condensed">
+				    	<table class="table table-hover table-bordered table-condensed" id="log_pitching_table">
+				    		<caption>投球成績</caption>
 							<thead>
-								<tr>
-									<th colspan="18" class="table-title">投球成績</th>
-								</tr>
 								<tr>
 									<th>日期</th>
 									<th>聯賽</th>
@@ -221,11 +216,9 @@
 						</span>
 
 
-						<table class="table table-hover table-bordered table-condensed">
+						<table class="table table-hover table-bordered table-condensed tablesorter" id="career_batting_table">
+							<caption>生涯打擊成績</caption>
 							<thead>
-								<tr>
-									<th colspan="18" class="table-title">生涯打擊成績</th>
-								</tr>
 								<tr>
 								{% if career_selected_year == 0 %}
 									<th>球季</th>
@@ -249,6 +242,7 @@
 									<th>上壘率</th>
 									<th>長打率</th>
 									<th>攻擊指數</th>
+									<th>銀棒指數</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -276,17 +270,16 @@
 									<td>{{batting.obp_s}}</td>
 									<td>{{batting.slg_s}}</td>
 									<td>{{batting.ops_s}}</td>
+									<td>{{batting.ssa}}</td>
 								</tr>
 							{% endfor %}
 							</tbody>
 
 						</table>
 
-				    	<table class="table table-hover table-bordered table-condensed">
+				    	<table class="table table-hover table-bordered table-condensed tablesorter" id="career_pitching_table">
+				    		<caption>生涯投球成績</caption>
 							<thead>
-								<tr>
-									<th colspan="18" class="table-title">生涯投球成績</th>
-								</tr>
 								<tr>
 								{% if career_selected_year == 0 %}
 									<th>球季</th>

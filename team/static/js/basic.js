@@ -90,6 +90,10 @@ $(document).ready(function() {
     // enable table sort
     $("#all_batting_table").tablesorter();
     $("#all_pitching_table").tablesorter();
+    $("#team_batting_table").tablesorter();
+    $("#team_pitching_table").tablesorter();
+    $("#career_batting_table").tablesorter();
+    $("#career_pitching_table").tablesorter();
     
     $('.carousel').carousel({
         interval: 5000
