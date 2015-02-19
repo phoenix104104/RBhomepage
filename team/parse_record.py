@@ -186,11 +186,9 @@ def parse_column(team):
     supp_out = 0    # supposed out
     col2inn  = []
 
-
     while(True):
         pa = team.order_table[order][turn][1]
         pa.column = column
-
         if( pa.endInning == '!'): # end of game
             col2inn.append(inning)
             break
@@ -287,15 +285,6 @@ def print_batter(batters):
             sys.stdout.write("(%d)%-12s " %(pa.column, pa.raw_str) )
         sys.stdout.write('\n')
 
-def count_total_PA(order_table):
-    n = 0
-    nRow = len(order_table)
-    for i in len(nRow):
-        for j in len(order_table[i]):
-            n += 1
-
-    n -= nRow*2
-    return n
 
 def parse_order_table(team):
     
@@ -311,9 +300,6 @@ def parse_order_table(team):
     for batter in team.batters:
         curr_order.append(batter)
     
-    nPA = count_total_PA(team.order_table)
-    print nPA
-
     team_H = 0
     opp_E = 0
     while(True):
@@ -342,7 +328,7 @@ def parse_order_table(team):
         if( order == nOrder ):
             order = 0
             turn += 1
-    
+
     team.H  = team_H
     if( err == "" ):
         parse_column(team)
