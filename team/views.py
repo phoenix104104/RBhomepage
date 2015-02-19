@@ -909,8 +909,8 @@ def edit_game(request, game_id):
 		game.date      		= request.POST["date"]
 		game.location  		= request.POST["location"]
 		game.record			= request.POST["record_text"]
-		game.away_name  	= request.POST["away_name"]
-		game.home_name  	= request.POST["home_name"]
+		game.away_name 		= request.POST["away_name"]
+		game.home_name   	= request.POST["home_name"]
 		game.away_scores 	= gather_team_scores_from_web(request, 'away')
 		game.home_scores 	= gather_team_scores_from_web(request, 'home')
 			
