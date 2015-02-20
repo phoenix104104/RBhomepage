@@ -380,8 +380,8 @@ def show_team(request):
 		selected_league	= int(request.POST.get("selected-league"))
 	
 
-	batting_all  = Batting.objects.all()
-	pitching_all  = Pitching.objects.all()
+	batting_all  = Batting.objects.filter(member__number__lte = 99)
+	pitching_all  = Pitching.objects.filter(member__number__lte = 99)
 	
 	if( selected_year != 0 ):
 		batting_all  = batting_all.filter(game__date__year = selected_year)
@@ -510,7 +510,7 @@ def show_all_batting(request):
 		selected_month 	= int(request.POST.get("selected-month"))
 		selected_league	= int(request.POST.get("selected-league"))
 
-	batting_all = Batting.objects.all()
+	batting_all = Batting.objects.filter(member__number__lte = 99)
 	if( selected_year != 0 ):
 		batting_all  = batting_all.filter(game__date__year = selected_year)
 	if( selected_month != 0 ):
@@ -565,7 +565,7 @@ def show_all_pitching(request, order="win"):
 		selected_month 	= int(request.POST.get("selected-month"))
 		selected_league	= int(request.POST.get("selected-league"))
 
-	pitching_all = Pitching.objects.all()
+	pitching_all = Pitching.objects.filter(member__number__lte = 99)
 	if( selected_year != 0 ):
 		pitching_all  = pitching_all.filter(game__date__year = selected_year)
 	if( selected_month != 0 ):
