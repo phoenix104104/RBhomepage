@@ -1008,32 +1008,11 @@ def edit_game(request, game_id):
 
 					batting_list.append(batting)
 
+
+				# DO NOT modify pitching query with team.pitchers
 				pitching_list = []
-				i = 0
-				for pitcher in team.pitchers:
-					
-					pitching = Pitching()
-					for play in pitching_query:
-						if pitcher.name.decode('utf8') == play.member.name:
-							pitching = play
-							break
-					
-					pitching.member = Member.objects.get(name=pitcher.name.decode('utf8'))
-					pitching.game 	= game
-					pitching.order 	= i
-					pitching.outs   = pitcher.OUT
-					pitching.pa     = pitcher.TBF
-					pitching.hit   	= pitcher.H
-					pitching.hr    	= pitcher.HR
-					pitching.bb    	= pitcher.BB
-					pitching.k     	= pitcher.K
-					pitching.run   	= pitcher.RUN
-					pitching.er    	= pitcher.ER
-					pitching.go    	= pitcher.GO
-					pitching.fo    	= pitcher.FO
-					
+				for pitching in pitching_query:
 					pitching_list.append(pitching)
-					i += 1
 
 				# add rows for changing pitchers
 				N = len(pitching_list)

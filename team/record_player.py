@@ -68,6 +68,7 @@ class Team:
         self.batter_table   = []
         self.pitcher_table  = []
         self.raw_record     = ""
+        self.nPA            = 0
 
     def hasRecord(self):
         return len(self.order_table) != 0

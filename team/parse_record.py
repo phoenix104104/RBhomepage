@@ -186,10 +186,12 @@ def parse_column(team):
     supp_out = 0    # supposed out
     col2inn  = []
 
+    count = 0
     while(True):
         pa = team.order_table[order][turn][1]
+        count += 1
         pa.column = column
-        if( pa.endInning == '!'): # end of game
+        if( pa.endInning == '!' or count == team.nPA ): # end of game
             col2inn.append(inning)
             break
 
@@ -225,10 +227,10 @@ def parse_pitcher_info(team, pitchers):
     supp_out = 0    # supposed out
     
     pitcher = pitchers[0]
-
+    count = 0
     while(True):
         pa = team.order_table[order][turn][1]
-        
+        count += 1
         # change pitcher
         if( pa.change_pitcher != None ):
             name = pa.change_pitcher
@@ -249,7 +251,7 @@ def parse_pitcher_info(team, pitchers):
         if( err != "" ):
             break
 
-        if( pa.endInning == '!'): # end of game
+        if( pa.endInning == '!' or count == team.nPA ): # end of game
             break
 
         supp_out += pa.out
@@ -285,6 +287,13 @@ def print_batter(batters):
             sys.stdout.write("(%d)%-12s " %(pa.column, pa.raw_str) )
         sys.stdout.write('\n')
 
+def count_total_PA(table):
+    n = 0
+    for row in table:
+        for col in row:
+            n += 1
+
+    return n
 
 def parse_order_table(team):
     
@@ -302,8 +311,12 @@ def parse_order_table(team):
     
     team_H = 0
     opp_E = 0
+
+    team.nPA = count_total_PA(team.order_table)
+    count = 0
     while(True):
         pa, err = parse_PA(team, order, turn, inning, curr_order)
+        count += 1
         if( err != "" ):
             err += " - row %d" %(order+1)
             break
@@ -321,7 +334,7 @@ def parse_order_table(team):
             inning += 1
             score = 0
 
-        if( pa.endInning == '!' ):
+        if( pa.endInning == '!' or count == team.nPA):
             break
 
         order += 1
