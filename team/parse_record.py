@@ -329,7 +329,7 @@ def parse_order_table(team):
         if( pa.result == "E" ):
             opp_E += 1
 
-        if( pa.endInning in ('#', '!') ):  # change inning
+        if( pa.endInning in ('#', '!') or count == team.nPA ):  # change inning
             team.scores[inning-1] = score
             inning += 1
             score = 0
