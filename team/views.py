@@ -113,11 +113,11 @@ def show_game(request, game_id) :
 		if 'download-btn' in request.POST:
 			print ("download game %d PTT format" %game.id)
 			
-			filename = '%s-%s-%s.txt' %(str(game.date), game.away, game.home)
+			filename = '%s-%s-%s.txt' %(str(game.date), game.away_name, game.home_name)
 			filepath = 'team/static/txt/%s' %filename
 
 			with open(filepath, 'w') as f:
-				f.write(rd_game.post_ptt)
+				f.write(game_record.post_ptt)
 				print ("save %s" %filepath)
 
 			response = HttpResponse(FileWrapper( file(filepath) ), content_type=mimetypes.guess_type(filepath)[0] )
