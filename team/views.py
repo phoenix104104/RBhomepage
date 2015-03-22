@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from models import League, Member, Game, Batting, Pitching, Current
-import mimetypes, os
+import mimetypes, os, sys
 from operator import attrgetter
 from django.core.servers.basehttp import FileWrapper
 from parse_record import parse_game_record, extract_single_team_data
@@ -112,8 +112,7 @@ def show_game(request, game_id) :
 		# download PTT format
 		if 'download-btn' in request.POST:
 			print ("download game %d PTT format" %game.id)
-			
-			filename = '%s-%s-%s.txt' %(str(game.date), game.away_name, game.home_name)
+			filename = '%s.txt' %str(game.date)
 			filepath = 'team/static/txt/%s' %filename
 
 			with open(filepath, 'w') as f:
