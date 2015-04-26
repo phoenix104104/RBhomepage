@@ -666,7 +666,7 @@ def add_game(request):
 			print ("add new league!")
 			league_name = request.POST["new-league-name"]
 
-			if league_name != None:
+			if league_name != None and league_name != "":
 
 				league = League.objects.filter(name = league_name)
 				if( league.exists() ):

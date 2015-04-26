@@ -14,8 +14,21 @@
 {% endblock navbar %}
 
 {% block content %}
-{% if user.is_authenticated %}
 <div class="container">
+
+{% if not user.is_authenticated %}
+    
+	<div class="row">
+	 	<div class="row-center">    		
+        	<div class="col-xs-4 col-center">	
+				<div class="alert alert-danger" role="alert">
+					<b>Warning!</b> Please login first.
+				</div>
+            </div>
+        </div>
+    </div>
+
+{% else %}
 	
 	<form action="{% url 'show_team' %}" method = "post">
 	{% csrf_token %}
@@ -173,8 +186,9 @@
 
 	</form>
 
-</div>
-
 
 {% endif %}
+
+</div> <!-- end of container -->
+
 {% endblock content %}
