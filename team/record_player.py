@@ -94,6 +94,13 @@ class Team:
                 return batter
         # not found
         return None
+
+    def find_pitcher(self, name):
+        for pitcher in self.pitchers:
+            if pitcher.name == name:
+                return pitcher
+        # not found
+        return None
     
     def compute_statistic(self):
         self.num_of_batters()

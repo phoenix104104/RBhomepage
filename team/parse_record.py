@@ -411,7 +411,7 @@ def make_game(game):
             err += " in Away Record"
             return game, err
 
-        err = parse_pitcher_info(away, home.pitchers)  
+        err = parse_pitcher_info(away, away.pitchers)  
         if( err != "" ):
             err += " in Away Record"
             return game, err
@@ -428,7 +428,7 @@ def make_game(game):
             err += " in Home Record"
             return game, err
 
-        err = parse_pitcher_info(home, away.pitchers)  
+        err = parse_pitcher_info(home, home.pitchers)  
         if( err != "" ):
             err += " in Home Record"
             return game, err
@@ -487,7 +487,9 @@ def load_record_file(recordFileName):
 
     return game_type, date, game_id, location, away_team_name, away_scores, away_table, home_team_name, home_scores, home_table
 
-## main calling function
+##########################################################################
+######################### main calling function ##########################
+##########################################################################
 def parse_game_record(away_team_name, away_scores, away_table, home_team_name, home_scores, home_table):
     
     err = ""

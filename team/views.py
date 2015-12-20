@@ -903,6 +903,8 @@ def edit_game(request, game_id):
 		return render(request, 'team/edit_game.html', context)
 
 	else:
+        # POST
+
 		league_id 			= request.POST["league_id"]
 		game.league	 		= League.objects.get(id=league_id)
 		game.date      		= request.POST["date"]
@@ -912,7 +914,8 @@ def edit_game(request, game_id):
 		game.home_name   	= request.POST["home_name"]
 		game.away_scores 	= gather_team_scores_from_web(request, 'away')
 		game.home_scores 	= gather_team_scores_from_web(request, 'home')
-			
+		
+		print game.home_scores	
 		message = ""
 		warning = ""
 		game_record = None
